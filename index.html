@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch & Manage | We Build It. We Run It.</title>
+    <meta name="description" content="Professional website design, redesign, and monthly maintenance. We launch your digital presence and manage it daily.">
+    <meta property="og:title" content="Launch & Manage">
+    <meta property="og:description" content="We Build It. We Run It. Website design and monthly maintenance for businesses ready to grow.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://launchandmanage.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:#050505;color:#e0e0e0;font-family:Inter,sans-serif;overflow-x:hidden}
+        a{text-decoration:none;color:inherit}
+
+        /* === LOADING SCREEN === */
+        .loader{position:fixed;top:0;left:0;width:100%;height:100%;background:#050505;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.6s ease,visibility 0.6s ease}
+        .loader.done{opacity:0;visibility:hidden}
+        .loader-text{font-family:Space Grotesk,sans-serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:6px;overflow:hidden}
+        .loader-text span{display:inline-block;transform:translateY(100%);animation:slideUp 0.5s ease forwards}
+        .loader-line{width:0;height:2px;background:linear-gradient(90deg,#6c5ce7,#00cec9);margin-top:20px;animation:lineGrow 1.5s ease 0.8s forwards;border-radius:2px}
+        @keyframes slideUp{to{transform:translateY(0)}}
+        @keyframes lineGrow{to{width:200px}}
+
+        /* === CURSOR GLOW (desktop only) === */
+        .cursor-glow{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(108,92,231,0.08) 0%,transparent 70%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);transition:left 0.3s ease,top 0.3s ease}
+
+        /* === GRADIENT ACCENT === */
+        .gradient-text{background:linear-gradient(135deg,#6c5ce7,#00cec9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .gradient-bg{background:linear-gradient(135deg,#6c5ce7,#00cec9)}
+        .gradient-border{border:2px solid transparent;background-image:linear-gradient(#050505,#050505),linear-gradient(135deg,#6c5ce7,#00cec9);background-origin:border-box;background-clip:padding-box,border-box}
+
+        /* === NAV === */
+        .nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:20px 50px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,5,5,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.03);opacity:0;animation:fadeIn 1s ease 2s forwards}
+        .nav-logo{font-family:Space Grotesk,sans-serif;font-size:20px;font-weight:700;letter-spacing:3px;color:#fff}
+        .nav-logo span{color:#6c5ce7}
+        .nav-links{display:flex;gap:30px;align-items:center}
+        .nav-links a{font-size:13px;font-weight:500;color:#666;letter-spacing:1px;text-transform:uppercase;transition:color 0.3s}
+        .nav-links a:hover{color:#fff}
+        .nav-cta{background:linear-gradient(135deg,#6c5ce7,#00cec9);color:#fff!important;padding:10px 24px;border-radius:6px;font-weight:600;font-size:12px;letter-spacing:1.5px;transition:transform 0.3s,box-shadow 0.3s}
+        .nav-cta:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(108,92,231,0.4)}
+
+        /* === HERO === */
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 40%,rgba(108,92,231,0.06) 0%,transparent 50%),radial-gradient(circle at 70% 60%,rgba(0,206,201,0.04) 0%,transparent 50%);animation:heroBgFloat 20s ease-in-out infinite}
+        @keyframes heroBgFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(-2%,2%)}}
+        .hero-content{position:relative;z-index:2;max-width:900px}
+        .hero-badge{display:inline-block;font-family:Space Grotesk,sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;padding:8px 20px;border-radius:30px;margin-bottom:30px;opacity:0;animation:fadeInUp 0.8s ease 2.2s forwards}
+        .hero h1{font-family:Space Grotesk,sans-serif;font-size:82px;font-weight:700;line-height:1.02;color:#fff;margin-bottom:24px;opacity:0;animation:fadeInUp 0.8s ease 2.4s forwards}
+        .hero h1 .line2{display:block;font-size:36px;font-weight:300;color:#888;margin-top:10px;letter-spacing:2px}
+        .hero p{font-size:19px;color:#777;line-height:1.7;max-width:600px;margin:0 auto 40px;font-weight:300;opacity:0;animation:fadeInUp 0.8s ease 2.6s forwards}
+        .hero-buttons{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeInUp 0.8s ease 2.8s forwards}
+        .btn{font-family:Space Grotesk,sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:15px 38px;border-radius:6px;transition:all 0.3s;cursor:pointer;display:inline-block;border:none}
+        .btn-primary{background:linear-gradient(135deg,#6c5ce7,#00cec9);color:#fff;box-shadow:0 4px 20px rgba(108,92,231,0.3)}
+        .btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(108,92,231,0.5)}
+        .btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.15)}
+        .btn-outline:hover{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.03)}
+
+        .hero-stats{display:flex;gap:60px;justify-content:center;margin-top:60px;opacity:0;animation:fadeInUp 0.8s ease 3s forwards}
+        .stat{text-align:center}
+        .stat-num{font-family:Space Grotesk,sans-serif;font-size:42px;font-weight:700;color:#fff;line-height:1}
+        .stat-label{font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+
+        /* === GRID LINES BG === */
+        .grid-bg{position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;z-index:0}
+
+        /* === SECTION === */
+        .section{padding:120px 40px;max-width:1200px;margin:0 auto;position:relative}
+        .section-label{font-family:Space Grotesk,sans-serif;font-size:11px;font-weight:600;letter-spacing:5px;text-transform:uppercase;margin-bottom:15px}
+        .section-title{font-family:Space Grotesk,sans-serif;font-size:48px;font-weight:700;color:#fff;margin-bottom:20px;line-height:1.1}
+        .section-sub{font-size:17px;color:#666;line-height:1.7;max-width:550px}
+
+        /* === SERVICES === */
+        .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+        .service-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:40px 30px;transition:all 0.4s;position:relative;overflow:hidden}
+        .service-card:hover{border-color:rgba(108,92,231,0.3);transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+        .service-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#6c5ce7,#00cec9,transparent);opacity:0;transition:opacity 0.4s}
+        .service-card:hover::before{opacity:1}
+        .service-icon{font-size:36px;margin-bottom:20px;display:block}
+        .service-title{font-family:Space Grotesk,sans-serif;font-size:22px;font-weight:600;color:#fff;margin-bottom:12px}
+        .service-desc{font-size:14px;color:#666;line-height:1.7}
+        .service-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-top:18px;background:rgba(108,92,231,0.1);color:#6c5ce7;border:1px solid rgba(108,92,231,0.2)}
+
+        /* === PRICING === */
+        .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+        .price-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:45px 35px;transition:all 0.4s;position:relative}
+        .price-card.featured{border-color:rgba(108,92,231,0.4);background:rgba(108,92,231,0.03)}
+        .price-card.featured::before{content:'MOST POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-family:Space Grotesk,sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;padding:5px 18px;border-radius:20px;background:linear-gradient(135deg,#6c5ce7,#00cec9);color:#fff}
+        .price-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+        .price-name{font-family:Space Grotesk,sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:15px}
+        .price-amount{font-family:Space Grotesk,sans-serif;font-size:52px;font-weight:700;color:#fff;line-height:1}
+        .price-amount span{font-size:18px;color:#555;font-weight:400}
+        .price-desc{font-size:14px;color:#555;margin:15px 0 25px;line-height:1.5}
+        .price-features{list-style:none;margin-bottom:30px}
+        .price-features li{font-size:14px;color:#888;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:10px}
+        .price-features li::before{content:'';width:6px;height:6px;border-radius:50%;background:#6c5ce7;flex-shrink:0}
+        .price-btn{display:block;text-align:center;padding:14px;border-radius:8px;font-family:Space Grotesk,sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:all 0.3s}
+        .price-btn-primary{background:linear-gradient(135deg,#6c5ce7,#00cec9);color:#fff}
+        .price-btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(108,92,231,0.4)}
+        .price-btn-outline{border:1px solid rgba(255,255,255,0.1);color:#fff}
+        .price-btn-outline:hover{border-color:rgba(255,255,255,0.3)}
+
+        /* === PROCESS === */
+        .process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:60px}
+        .step{text-align:center;padding:30px 20px}
+        .step-num{font-family:Space Grotesk,sans-serif;font-size:64px;font-weight:700;background:linear-gradient(135deg,rgba(108,92,231,0.3),rgba(0,206,201,0.3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:15px}
+        .step-title{font-family:Space Grotesk,sans-serif;font-size:18px;font-weight:600;color:#fff;margin-bottom:8px}
+        .step-desc{font-size:13px;color:#555;line-height:1.6}
+
+        /* === CTA === */
+        .cta-section{text-align:center;padding:120px 40px;position:relative;overflow:hidden}
+        .cta-section::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at center,rgba(108,92,231,0.08) 0%,transparent 70%)}
+        .cta-section h2{font-family:Space Grotesk,sans-serif;font-size:52px;font-weight:700;color:#fff;margin-bottom:15px;position:relative;z-index:1}
+        .cta-section p{font-size:18px;color:#666;margin-bottom:40px;position:relative;z-index:1}
+
+        /* === FOOTER === */
+        .footer{padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,0.03)}
+        .footer-text{font-size:12px;color:#333;letter-spacing:1px}
+
+        /* === ANIMATIONS === */
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+        /* === SCROLL REVEAL === */
+        .reveal{opacity:0;transform:translateY(40px);transition:all 0.8s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* === MOBILE === */
+        @media(max-width:768px){
+            .nav{padding:15px 20px}
+            .nav-logo{font-size:16px;letter-spacing:2px}
+            .nav-links a:not(.nav-cta){display:none}
+            .nav-cta{padding:8px 18px;font-size:11px}
+            .hero{padding:100px 25px 60px}
+            .hero h1{font-size:40px}
+            .hero h1 .line2{font-size:20px}
+            .hero p{font-size:15px}
+            .hero-stats{gap:30px;flex-wrap:wrap}
+            .stat-num{font-size:30px}
+            .btn{padding:13px 28px;font-size:12px}
+            .section{padding:60px 25px}
+            .section-title{font-size:32px}
+            .services-grid,.pricing-grid{grid-template-columns:1fr}
+            .process-steps{grid-template-columns:repeat(2,1fr);gap:20px}
+            .cta-section h2{font-size:32px}
+            .loader-text{font-size:24px;letter-spacing:3px}
+            .cursor-glow{display:none}
+        }
+        @media(max-width:380px){
+            .hero h1{font-size:32px}
+            .process-steps{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loader" id="loader">
+    <div class="loader-text">
+        <span style="animation-delay:0.1s">L</span><span style="animation-delay:0.15s">A</span><span style="animation-delay:0.2s">U</span><span style="animation-delay:0.25s">N</span><span style="animation-delay:0.3s">C</span><span style="animation-delay:0.35s">H</span><span style="animation-delay:0.5s">&nbsp;</span><span style="animation-delay:0.55s">&</span><span style="animation-delay:0.7s">&nbsp;</span><span style="animation-delay:0.75s">M</span><span style="animation-delay:0.8s">A</span><span style="animation-delay:0.85s">N</span><span style="animation-delay:0.9s">A</span><span style="animation-delay:0.95s">G</span><span style="animation-delay:1s">E</span>
+    </div>
+    <div class="loader-line"></div>
+</div>
+
+<!-- CURSOR GLOW -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav-logo">LAUNCH <span>&</span> MANAGE</div>
+    <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#process">Process</a>
+        <a href="#contact" class="nav-cta">GET STARTED</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="grid-bg"></div>
+    <div class="hero-content">
+        <div class="hero-badge gradient-border">WE BUILD IT. WE RUN IT.</div>
+        <h1>
+            <span class="gradient-text">Launch</span> Your Brand.
+            <span class="line2">We'll manage the rest.</span>
+        </h1>
+        <p>Professional website design, daily content management, and social media control across every platform. One team. One monthly fee. Zero stress.</p>
+        <div class="hero-buttons">
+            <a href="#pricing" class="btn btn-primary">VIEW PACKAGES</a>
+            <a href="#services" class="btn btn-outline">WHAT WE DO</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><div class="stat-num gradient-text">13</div><div class="stat-label">Platforms</div></div>
+            <div class="stat"><div class="stat-num gradient-text">24/7</div><div class="stat-label">Support</div></div>
+            <div class="stat"><div class="stat-num gradient-text">100%</div><div class="stat-label">Managed</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+    <div class="section-label gradient-text reveal">What We Do</div>
+    <h2 class="section-title reveal">Everything your business<br>needs to <span class="gradient-text">grow online</span>.</h2>
+    <p class="section-sub reveal">From launch to daily management, we handle every pixel and every post.</p>
+    <div class="services-grid">
+        <div class="service-card reveal">
+            <span class="service-icon">&#9998;</span>
+            <div class="service-title">Website Design</div>
+            <div class="service-desc">Custom websites built from scratch. Modern, fast, mobile-first. You provide the vision, we bring it to life.</div>
+            <span class="service-tag">One-Time Build</span>
+        </div>
+        <div class="service-card reveal">
+            <span class="service-icon">&#8635;</span>
+            <div class="service-title">Website Redesign</div>
+            <div class="service-desc">Already have a site? We'll rebuild it with modern design, better performance, and a layout that converts visitors to customers.</div>
+            <span class="service-tag">Upgrade</span>
+        </div>
+        <div class="service-card reveal">
+            <span class="service-icon">&#9881;</span>
+            <div class="service-title">Monthly Maintenance</div>
+            <div class="service-desc">Updates, fixes, content changes, security patches. Your site stays fresh and running 24/7 without you lifting a finger.</div>
+            <span class="service-tag">Monthly</span>
+        </div>
+        <div class="service-card reveal">
+            <span class="service-icon">&#9733;</span>
+            <div class="service-title">Social Media Management</div>
+            <div class="service-desc">Daily posts across up to 13 platforms. We create the content, schedule it, and grow your audience while you focus on business.</div>
+            <span class="service-tag">Daily Posts</span>
+        </div>
+        <div class="service-card reveal">
+            <span class="service-icon">&#9889;</span>
+            <div class="service-title">Ad Creation</div>
+            <div class="service-desc">Scroll-stopping graphics and copy for Facebook, Instagram, Google, and more. Designed to convert.</div>
+            <span class="service-tag">Campaigns</span>
+        </div>
+        <div class="service-card reveal">
+            <span class="service-icon">&#9654;</span>
+            <div class="service-title">Content Production</div>
+            <div class="service-desc">Video uploads, live broadcasts, newsletters, blog posts. We keep your brand active and visible everywhere.</div>
+            <span class="service-tag">Full Service</span>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing" style="padding-top:80px">
+    <div class="section-label gradient-text reveal">Pricing</div>
+    <h2 class="section-title reveal">Simple plans.<br><span class="gradient-text">Serious results.</span></h2>
+    <p class="section-sub reveal">No hidden fees. No contracts. Cancel anytime.</p>
+    <div class="pricing-grid">
+        <div class="price-card reveal">
+            <div class="price-name">Starter</div>
+            <div class="price-amount">$499<span>/mo</span></div>
+            <div class="price-desc">Perfect for small businesses getting started online.</div>
+            <ul class="price-features">
+                <li>2 social media platforms</li>
+                <li>1 post per day per platform</li>
+                <li>Website maintenance</li>
+                <li>Monthly analytics report</li>
+                <li>Email support</li>
+            </ul>
+            <a href="#contact" class="price-btn price-btn-outline">GET STARTED</a>
+        </div>
+        <div class="price-card featured reveal">
+            <div class="price-name">Growth</div>
+            <div class="price-amount">$999<span>/mo</span></div>
+            <div class="price-desc">For businesses ready to scale their digital presence.</div>
+            <ul class="price-features">
+                <li>5 social media platforms</li>
+                <li>1 post per day per platform</li>
+                <li>Website upgrades + content</li>
+                <li>Ad creation + graphics</li>
+                <li>Weekly performance reports</li>
+                <li>Priority support</li>
+            </ul>
+            <a href="#contact" class="price-btn price-btn-primary">GET STARTED</a>
+        </div>
+        <div class="price-card reveal">
+            <div class="price-name">Enterprise</div>
+            <div class="price-amount">$1,999<span>/mo</span></div>
+            <div class="price-desc">Full-service digital management across every platform.</div>
+            <ul class="price-features">
+                <li>All 13 platforms managed</li>
+                <li>1-2 posts per day per platform</li>
+                <li>Full website management</li>
+                <li>Ad campaigns + optimization</li>
+                <li>Video + live broadcast support</li>
+                <li>Newsletter + email marketing</li>
+                <li>Dedicated account manager</li>
+            </ul>
+            <a href="#contact" class="price-btn price-btn-outline">CONTACT US</a>
+        </div>
+    </div>
+</section>
+
+<!-- ONE-TIME BUILDS -->
+<section class="section" style="padding-top:40px">
+    <div class="pricing-grid" style="grid-template-columns:repeat(2,1fr);max-width:800px;margin:0 auto">
+        <div class="price-card reveal">
+            <div class="price-name">Website Build</div>
+            <div class="price-amount" style="font-size:36px">$2,500+</div>
+            <div class="price-desc">Custom website built from scratch.</div>
+            <ul class="price-features">
+                <li>Custom design + development</li>
+                <li>Mobile responsive</li>
+                <li>SEO optimized</li>
+                <li>Contact forms + integrations</li>
+                <li>Delivered in 2-4 weeks</li>
+            </ul>
+            <a href="#contact" class="price-btn price-btn-outline">GET A QUOTE</a>
+        </div>
+        <div class="price-card reveal">
+            <div class="price-name">Website Redesign</div>
+            <div class="price-amount" style="font-size:36px">$1,500+</div>
+            <div class="price-desc">Transform your existing site.</div>
+            <ul class="price-features">
+                <li>Modern redesign</li>
+                <li>Performance optimization</li>
+                <li>Content migration</li>
+                <li>Mobile overhaul</li>
+                <li>Delivered in 1-3 weeks</li>
+            </ul>
+            <a href="#contact" class="price-btn price-btn-outline">GET A QUOTE</a>
+        </div>
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" id="process">
+    <div class="section-label gradient-text reveal">How It Works</div>
+    <h2 class="section-title reveal">Four steps to<br><span class="gradient-text">going live</span>.</h2>
+    <div class="process-steps">
+        <div class="step reveal">
+            <div class="step-num">01</div>
+            <div class="step-title">Discovery</div>
+            <div class="step-desc">Tell us about your business, goals, and vision. We listen.</div>
+        </div>
+        <div class="step reveal">
+            <div class="step-num">02</div>
+            <div class="step-title">Design</div>
+            <div class="step-desc">We build your site and content strategy. You approve every detail.</div>
+        </div>
+        <div class="step reveal">
+            <div class="step-num">03</div>
+            <div class="step-title">Launch</div>
+            <div class="step-desc">Your site goes live. Social accounts activated. Ads running.</div>
+        </div>
+        <div class="step reveal">
+            <div class="step-num">04</div>
+            <div class="step-title">Manage</div>
+            <div class="step-desc">We handle everything daily. You focus on your business.</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+    <h2 class="reveal">Ready to <span class="gradient-text">launch</span>?</h2>
+    <p class="reveal">Get in touch and we'll have a plan for you within 24 hours.</p>
+    <div class="reveal">
+        <a href="mailto:hello@launchandmanage.com" class="btn btn-primary" style="font-size:15px;padding:18px 50px">GET STARTED TODAY</a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-text">LAUNCH & MANAGE &copy; 2026</div>
+</footer>
+
+<script>
+// === LOADER ===
+window.addEventListener('load',function(){
+    setTimeout(function(){document.getElementById('loader').classList.add('done')},2200);
+});
+
+// === CURSOR GLOW ===
+var glow=document.getElementById('cursorGlow');
+if(window.innerWidth>768){
+    document.addEventListener('mousemove',function(e){
+        glow.style.left=e.clientX+'px';
+        glow.style.top=e.clientY+'px';
+    });
+}
+
+// === SCROLL REVEAL ===
+var reveals=document.querySelectorAll('.reveal');
+function checkReveal(){
+    reveals.forEach(function(el){
+        var top=el.getBoundingClientRect().top;
+        if(top<window.innerHeight-80){
+            el.classList.add('visible');
+        }
+    });
+}
+window.addEventListener('scroll',checkReveal);
+checkReveal();
+
+// === SMOOTH NAV SCROLL ===
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+        e.preventDefault();
+        var target=document.querySelector(this.getAttribute('href'));
+        if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+});
+</script>
+
+</body>
+</html>
