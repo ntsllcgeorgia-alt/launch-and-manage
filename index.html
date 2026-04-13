@@ -38,29 +38,29 @@
             display:flex;align-items:center;justify-content:center;
             background:#050505;overflow:hidden
         }
-        .intro-shutter-top,.intro-shutter-bottom{
-            position:absolute;left:0;width:100%;height:50%;background:#050505;z-index:2;
-            transition:transform 1s cubic-bezier(0.76,0,0.24,1)
+        .intro-video{
+            width:100%;height:100%;object-fit:cover;
+            opacity:0;transition:opacity 0.4s ease
         }
-        .intro-shutter-top{top:0}
-        .intro-shutter-bottom{bottom:0}
-        .intro.reveal .intro-shutter-top{transform:translateY(-100%)}
-        .intro.reveal .intro-shutter-bottom{transform:translateY(100%)}
-        .intro-logo{
-            position:relative;z-index:1;
-            font-family:'Syne',sans-serif;font-size:24px;font-weight:800;
-            letter-spacing:8px;color:#fff;text-transform:uppercase;
-            opacity:0;animation:introFadeIn 0.6s ease 0.3s forwards
+        .intro-video.ready{opacity:1}
+        .intro-vignette{
+            position:absolute;inset:0;pointer-events:none;z-index:2;
+            background:radial-gradient(ellipse at center,transparent 50%,rgba(5,5,5,0.4) 90%,#050505 100%)
         }
-        .intro-logo .ampersand{color:var(--accent)}
-        .intro-bar{
-            position:absolute;bottom:48%;left:50%;transform:translateX(-50%);
-            width:0;height:1px;background:var(--accent);z-index:3;
-            animation:introBarGrow 1.2s ease 0.6s forwards
+        .intro.done{
+            pointer-events:none;opacity:0;
+            transition:opacity 0.8s ease;visibility:hidden;transition:opacity 0.8s ease, visibility 0s 0.8s
         }
-        @keyframes introFadeIn{to{opacity:1}}
-        @keyframes introBarGrow{to{width:120px}}
-        .intro.done{pointer-events:none;visibility:hidden;opacity:0;transition:opacity 0.4s 0.8s,visibility 0s 1.2s}
+        .intro-skip{
+            position:absolute;bottom:30px;right:30px;z-index:3;
+            font-family:'Syne',sans-serif;font-size:10px;font-weight:600;
+            letter-spacing:3px;text-transform:uppercase;color:#555;
+            cursor:pointer;padding:8px 16px;
+            border:1px solid rgba(255,255,255,0.08);border-radius:3px;
+            background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);
+            transition:all 0.3s;opacity:0;animation:fadeIn 0.6s ease 1s forwards
+        }
+        .intro-skip:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
 
         /* === CUSTOM CURSOR === */
         .cursor-dot{
@@ -519,10 +519,11 @@
 
 <!-- INTRO SCREEN -->
 <div class="intro" id="intro">
-    <div class="intro-shutter-top"></div>
-    <div class="intro-shutter-bottom"></div>
-    <div class="intro-logo">LAUNCH <span class="ampersand">&</span> MANAGE</div>
-    <div class="intro-bar"></div>
+    <video class="intro-video" id="introVideo" muted playsinline preload="auto">
+        <source src="assets/intro-logo.mp4" type="video/mp4">
+    </video>
+    <div class="intro-vignette"></div>
+    <div class="intro-skip" id="introSkip">SKIP</div>
 </div>
 
 <!-- CUSTOM CURSOR -->
@@ -793,26 +794,50 @@
 
 <script>
 (function(){
-    // === INTRO SEQUENCE ===
+    // === INTRO VIDEO SEQUENCE ===
     var intro = document.getElementById('intro');
-    setTimeout(function(){ intro.classList.add('reveal'); }, 1400);
-    setTimeout(function(){ intro.classList.add('done'); }, 2400);
+    var video = document.getElementById('introVideo');
+    var skipBtn = document.getElementById('introSkip');
+    var introDone = false;
 
-    // === NAV SHOW AFTER INTRO ===
-    setTimeout(function(){
+    function revealSite(){
+        if(introDone) return;
+        introDone = true;
+        intro.classList.add('done');
         document.getElementById('nav').classList.add('show');
-    }, 2600);
 
-    // === HERO TEXT STAGGER ===
-    var words = document.querySelectorAll('#heroTagline .word');
-    words.forEach(function(w, i){
-        var baseDelay = 2600;
-        // Pause between line 1 and line 2
-        var delay = i < 3 ? baseDelay + (i * 150) : baseDelay + 600 + (i * 150);
-        setTimeout(function(){ w.classList.add('show'); }, delay);
+        // Hero text stagger
+        var words = document.querySelectorAll('#heroTagline .word');
+        words.forEach(function(w, i){
+            var delay = i < 3 ? (i * 150) : 600 + (i * 150);
+            setTimeout(function(){ w.classList.add('show'); }, delay);
+        });
+        setTimeout(function(){ document.getElementById('heroSub').classList.add('show'); }, 1100);
+        setTimeout(function(){ document.getElementById('heroButtons').classList.add('show'); }, 1300);
+    }
+
+    // Play video when it's ready
+    video.addEventListener('canplay', function(){
+        video.classList.add('ready');
+        video.play().catch(function(){
+            // If autoplay blocked, skip straight to site
+            revealSite();
+        });
     });
-    setTimeout(function(){ document.getElementById('heroSub').classList.add('show'); }, 3600);
-    setTimeout(function(){ document.getElementById('heroButtons').classList.add('show'); }, 3800);
+
+    // When video ends, reveal the site
+    video.addEventListener('ended', revealSite);
+
+    // Skip button
+    skipBtn.addEventListener('click', revealSite);
+
+    // Fallback: if video fails or takes too long, reveal site after 8s
+    setTimeout(function(){
+        if(!introDone) revealSite();
+    }, 8000);
+
+    // Fallback: if video errors out
+    video.addEventListener('error', revealSite);
 
     // === CUSTOM CURSOR ===
     var dot = document.getElementById('cursorDot');
