@@ -519,7 +519,7 @@
 
 <!-- INTRO SCREEN -->
 <div class="intro" id="intro">
-    <video class="intro-video" id="introVideo" muted playsinline preload="auto">
+    <video class="intro-video" id="introVideo" muted autoplay playsinline webkit-playsinline preload="auto" disablepictureinpicture x-webkit-airplay="deny">
         <source src="assets/intro-logo.mp4" type="video/mp4">
     </video>
     <div class="intro-vignette"></div>
@@ -816,14 +816,37 @@
         setTimeout(function(){ document.getElementById('heroButtons').classList.add('show'); }, 1300);
     }
 
-    // Play video when it's ready
-    video.addEventListener('canplay', function(){
-        video.classList.add('ready');
-        video.play().catch(function(){
-            // If autoplay blocked, skip straight to site
-            revealSite();
-        });
-    });
+    // Try to play — aggressively retry for mobile browsers
+    function tryPlay(){
+        var promise = video.play();
+        if(promise !== undefined){
+            promise.then(function(){
+                video.classList.add('ready');
+            }).catch(function(err){
+                // Autoplay blocked — try once more on any user interaction
+                video.classList.add('ready'); // show it anyway
+                var resume = function(){
+                    video.play().catch(function(){ revealSite(); });
+                    document.removeEventListener('touchstart', resume);
+                    document.removeEventListener('click', resume);
+                };
+                document.addEventListener('touchstart', resume, { passive: true });
+                document.addEventListener('click', resume);
+                // If user doesn't interact within 3s, skip to site
+                setTimeout(function(){
+                    if(video.paused && !introDone) revealSite();
+                }, 3000);
+            });
+        }
+    }
+
+    // Start as soon as enough is buffered
+    if(video.readyState >= 3){
+        tryPlay();
+    } else {
+        video.addEventListener('canplay', tryPlay, { once: true });
+        video.addEventListener('loadeddata', tryPlay, { once: true });
+    }
 
     // When video ends, reveal the site
     video.addEventListener('ended', revealSite);
