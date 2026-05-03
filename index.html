@@ -1020,9 +1020,21 @@
     var skipBtn = document.getElementById('introSkip');
     var introDone = false;
 
+    // Splash plays once per browser session. Survives /work/ -> home navigation
+    // but not full tab close + reopen. Set both at start (so refresh skips too)
+    // and again inside revealSite to catch the autoplay-blocked path.
+    var INTRO_KEY = 'lm_intro_seen';
+    var alreadySeen = false;
+    try { alreadySeen = sessionStorage.getItem(INTRO_KEY) === '1'; } catch(e){}
+
+    function markSeen(){
+        try { sessionStorage.setItem(INTRO_KEY, '1'); } catch(e){}
+    }
+
     function revealSite(){
         if(introDone) return;
         introDone = true;
+        markSeen();
         intro.classList.add('done');
         document.getElementById('nav').classList.add('show');
         document.getElementById('heroEyebrow').classList.add('show');
@@ -1036,36 +1048,48 @@
         setTimeout(function(){ document.getElementById('heroButtons').classList.add('show'); }, 1400);
     }
 
-    function tryPlay(){
-        var promise = video.play();
-        if(promise !== undefined){
-            promise.then(function(){
-                video.classList.add('ready');
-            }).catch(function(){
-                video.classList.add('ready');
-                var resume = function(){
-                    video.play().catch(function(){ revealSite(); });
-                    document.removeEventListener('touchstart', resume);
-                    document.removeEventListener('click', resume);
-                };
-                document.addEventListener('touchstart', resume, { passive: true });
-                document.addEventListener('click', resume);
-                setTimeout(function(){
-                    if(video.paused && !introDone) revealSite();
-                }, 3000);
-            });
+    if(alreadySeen){
+        // Skip splash entirely — site appears instantly with hero stagger
+        intro.style.transition = 'none';
+        intro.style.opacity = '0';
+        intro.style.visibility = 'hidden';
+        intro.style.pointerEvents = 'none';
+        // Don't preload the video on subsequent visits
+        try { video.removeAttribute('autoplay'); video.removeAttribute('preload'); video.src = ''; } catch(e){}
+        revealSite();
+    } else {
+        markSeen(); // set immediately so even a refresh mid-splash doesn't replay
+        function tryPlay(){
+            var promise = video.play();
+            if(promise !== undefined){
+                promise.then(function(){
+                    video.classList.add('ready');
+                }).catch(function(){
+                    video.classList.add('ready');
+                    var resume = function(){
+                        video.play().catch(function(){ revealSite(); });
+                        document.removeEventListener('touchstart', resume);
+                        document.removeEventListener('click', resume);
+                    };
+                    document.addEventListener('touchstart', resume, { passive: true });
+                    document.addEventListener('click', resume);
+                    setTimeout(function(){
+                        if(video.paused && !introDone) revealSite();
+                    }, 3000);
+                });
+            }
         }
-    }
 
-    if(video.readyState >= 3){ tryPlay(); }
-    else {
-        video.addEventListener('canplay', tryPlay, { once: true });
-        video.addEventListener('loadeddata', tryPlay, { once: true });
+        if(video.readyState >= 3){ tryPlay(); }
+        else {
+            video.addEventListener('canplay', tryPlay, { once: true });
+            video.addEventListener('loadeddata', tryPlay, { once: true });
+        }
+        video.addEventListener('ended', revealSite);
+        skipBtn.addEventListener('click', revealSite);
+        setTimeout(function(){ if(!introDone) revealSite(); }, 8000);
+        video.addEventListener('error', revealSite);
     }
-    video.addEventListener('ended', revealSite);
-    skipBtn.addEventListener('click', revealSite);
-    setTimeout(function(){ if(!introDone) revealSite(); }, 8000);
-    video.addEventListener('error', revealSite);
 
     // === CURSOR + MAGNETIC ===
     var dot = document.getElementById('cursorDot');
