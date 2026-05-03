@@ -653,9 +653,27 @@ footer {
   }
   body { padding-bottom: 54px; }
 
-  /* ── INTRO SPLASH — DISABLED on mobile (autoplay issues + cellular) */
-  .intro-splash { display: none !important; }
-  body { overflow: auto !important; }
+  /* ── INTRO SPLASH — uses portrait 9:16 video on mobile via <source media=> ── */
+  .intro-splash video {
+    object-fit: cover;
+    width: 100vw;
+    height: 100vh;
+  }
+  .intro-splash .brand-overlay .top {
+    font-size: clamp(48px, 14vw, 80px);
+  }
+  .intro-splash .brand-overlay .est {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    margin-top: 8px;
+  }
+  .intro-splash .skip {
+    top: 14px;
+    right: 14px;
+    padding: 8px 14px;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+  }
 }
 
 /* ── Very small phones (≤380px) ─────────────────────────────────── */
@@ -675,7 +693,8 @@ footer {
 
 <!-- ───────── Intro splash video ───────── -->
 <div class="intro-splash" id="introSplash">
-  <video id="introVideo" autoplay muted playsinline>
+  <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto">
+    <source src="higgsfield/hero_video_portrait.mp4" media="(max-width: 768px)" type="video/mp4">
     <source src="higgsfield/hero_video_1.mp4" type="video/mp4">
   </video>
   <div class="brand-overlay">
@@ -912,22 +931,13 @@ footer {
 <a href="tel:8175993360" class="mobile-cta">Call (817) 599-3360</a>
 
 <script>
-// ─── Intro splash video (DESKTOP ONLY) ───
+// ─── Intro splash video (works on mobile too — portrait video served via <source media>) ───
 (() => {
   const splash = document.getElementById('introSplash');
   const video = document.getElementById('introVideo');
   const skip = document.getElementById('introSkip');
   if (!splash || !video) return;
 
-  // BULLETPROOF MOBILE BYPASS — if narrow viewport OR touch device, kill the splash entirely
-  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-  if (isMobile) {
-    splash.remove();
-    document.body.style.overflow = '';
-    return;
-  }
-
-  // Desktop only: standard splash flow
   document.body.style.overflow = 'hidden';
   function dismiss() {
     splash.classList.add('gone');
@@ -936,11 +946,18 @@ footer {
   }
   video.addEventListener('ended', dismiss);
   skip.addEventListener('click', dismiss);
-  setTimeout(dismiss, 5500); // hard timeout fallback
+  // Hard 6-second fallback dismiss in case ended doesn't fire (some iOS quirks)
+  setTimeout(dismiss, 6000);
 
-  video.play().catch(() => {
-    setTimeout(dismiss, 100);
-  });
+  // Try to play; if autoplay is blocked by the browser, dismiss instantly so user
+  // never gets stuck on a frozen video splash.
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // autoplay blocked — skip splash, let user see the site immediately
+      setTimeout(dismiss, 200);
+    });
+  }
 })();
 
 // ─── Hero slideshow ───
