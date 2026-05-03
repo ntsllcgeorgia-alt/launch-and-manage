@@ -693,10 +693,7 @@ footer {
 
 <!-- ───────── Intro splash video ───────── -->
 <div class="intro-splash" id="introSplash">
-  <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto">
-    <source src="higgsfield/hero_video_portrait.mp4" media="(max-width: 768px)" type="video/mp4">
-    <source src="higgsfield/hero_video_1.mp4" type="video/mp4">
-  </video>
+  <video id="introVideo" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture x-webkit-airplay="deny"></video>
   <div class="brand-overlay">
     <div class="top">Regal Nails</div>
     <div class="est">Weatherford · Est. 2011</div>
@@ -931,33 +928,45 @@ footer {
 <a href="tel:8175993360" class="mobile-cta">Call (817) 599-3360</a>
 
 <script>
-// ─── Intro splash video (works on mobile too — portrait video served via <source media>) ───
+// ─── Intro splash video — JS picks ONE source so mobile and desktop never mix ───
 (() => {
   const splash = document.getElementById('introSplash');
   const video = document.getElementById('introVideo');
   const skip = document.getElementById('introSkip');
   if (!splash || !video) return;
 
+  const isPortrait = window.matchMedia('(max-width: 768px)').matches
+    || /iPhone|iPad|iPod|Android.*Mobile/i.test(navigator.userAgent);
+  video.src = isPortrait
+    ? 'higgsfield/hero_video_portrait.mp4'
+    : 'higgsfield/hero_video_1.mp4';
+  video.load();
+
   document.body.style.overflow = 'hidden';
+  let dismissed = false;
   function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
     splash.classList.add('gone');
     document.body.style.overflow = '';
     setTimeout(() => splash.remove(), 1300);
   }
   video.addEventListener('ended', dismiss);
   skip.addEventListener('click', dismiss);
-  // Hard 6-second fallback dismiss in case ended doesn't fire (some iOS quirks)
-  setTimeout(dismiss, 6000);
+  setTimeout(dismiss, 7000);
 
-  // Try to play; if autoplay is blocked by the browser, dismiss instantly so user
-  // never gets stuck on a frozen video splash.
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      // autoplay blocked — skip splash, let user see the site immediately
-      setTimeout(dismiss, 200);
-    });
+  function start() {
+    const p = video.play();
+    if (p !== undefined) {
+      p.catch(() => setTimeout(dismiss, 250));
+    }
   }
+  if (video.readyState >= 3) start();
+  else {
+    video.addEventListener('canplay', start, { once: true });
+    video.addEventListener('loadeddata', start, { once: true });
+  }
+  video.addEventListener('error', () => setTimeout(dismiss, 100));
 })();
 
 // ─── Hero slideshow ───
