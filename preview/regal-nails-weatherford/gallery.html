@@ -156,6 +156,97 @@ footer .meta { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase
   box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
 }
 @media (max-width: 768px) { .mobile-cta { display: block; } body { padding-bottom: 60px; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE OVERRIDES — gallery.html (≤768px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  body { font-size: 16px; }
+
+  .brand-bar {
+    padding: 14px 16px;
+    background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%);
+  }
+  .brand-mark { font-size: 16px; }
+  .brand-mark .est { display: none; }
+  .nav { gap: 14px !important; }
+  .nav a {
+    font-size: 9px !important;
+    letter-spacing: 0.2em !important;
+  }
+  .nav a.cta { padding: 8px 14px; font-size: 10px; }
+
+  .gallery-hero {
+    padding: 110px 20px 30px;
+  }
+  .gallery-hero .label {
+    font-size: 9px; letter-spacing: 0.3em; margin-bottom: 16px;
+  }
+  .gallery-hero h1 {
+    font-size: clamp(56px, 18vw, 88px) !important;
+    line-height: 0.9;
+  }
+  .gallery-hero .sub {
+    font-size: 16px;
+    margin-top: 20px;
+    line-height: 1.45;
+  }
+
+  .filters {
+    padding: 24px 14px 16px;
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    flex-shrink: 0;
+  }
+
+  .masonry {
+    columns: 2 150px !important;
+    column-gap: 6px !important;
+    padding: 16px 14px 50px;
+  }
+  .masonry .item {
+    margin-bottom: 6px;
+    border-radius: 1px;
+  }
+  .masonry .item .caption {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    padding: 12px 10px;
+  }
+
+  .cta-bottom {
+    padding: 60px 20px;
+  }
+  .cta-bottom h2 { font-size: 56px !important; line-height: 0.95; }
+  .cta-bottom .phone {
+    margin-top: 22px;
+    padding: 18px 28px;
+    font-size: 18px !important;
+  }
+
+  footer { padding: 40px 20px 100px; }
+  footer a { font-size: clamp(32px, 9vw, 50px) !important; }
+  footer .meta { font-size: 9px; letter-spacing: 0.2em; }
+
+  .mobile-cta {
+    padding: 14px 16px;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+}
+
+@media (max-width: 380px) {
+  .gallery-hero h1 { font-size: 56px !important; }
+  .cta-bottom h2 { font-size: 44px !important; }
+  .masonry { columns: 2 130px !important; }
+}
 </style>
 </head>
 <body>
