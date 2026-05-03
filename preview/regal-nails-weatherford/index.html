@@ -653,27 +653,9 @@ footer {
   }
   body { padding-bottom: 54px; }
 
-  /* ── INTRO SPLASH on mobile ───────────────────────────────────── */
-  .intro-splash video {
-    object-fit: cover;
-    height: 100vh;
-    width: 100vw;
-  }
-  .intro-splash .brand-overlay .top {
-    font-size: clamp(48px, 14vw, 80px);
-  }
-  .intro-splash .brand-overlay .est {
-    font-size: 9px;
-    letter-spacing: 0.35em;
-    margin-top: 8px;
-  }
-  .intro-splash .skip {
-    top: 14px;
-    right: 14px;
-    padding: 8px 14px;
-    font-size: 9px;
-    letter-spacing: 0.25em;
-  }
+  /* ── INTRO SPLASH — DISABLED on mobile (autoplay issues + cellular) */
+  .intro-splash { display: none !important; }
+  body { overflow: auto !important; }
 }
 
 /* ── Very small phones (≤380px) ─────────────────────────────────── */
@@ -930,14 +912,22 @@ footer {
 <a href="tel:8175993360" class="mobile-cta">Call (817) 599-3360</a>
 
 <script>
-// ─── Intro splash video ───
+// ─── Intro splash video (DESKTOP ONLY) ───
 (() => {
   const splash = document.getElementById('introSplash');
   const video = document.getElementById('introVideo');
   const skip = document.getElementById('introSkip');
   if (!splash || !video) return;
 
-  // Lock body scroll while splash is up
+  // BULLETPROOF MOBILE BYPASS — if narrow viewport OR touch device, kill the splash entirely
+  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  if (isMobile) {
+    splash.remove();
+    document.body.style.overflow = '';
+    return;
+  }
+
+  // Desktop only: standard splash flow
   document.body.style.overflow = 'hidden';
   function dismiss() {
     splash.classList.add('gone');
@@ -946,12 +936,10 @@ footer {
   }
   video.addEventListener('ended', dismiss);
   skip.addEventListener('click', dismiss);
-  // Fallback timeout in case video doesn't fire 'ended' (5s max)
-  setTimeout(dismiss, 5500);
+  setTimeout(dismiss, 5500); // hard timeout fallback
 
-  // Try autoplay; if blocked, fall back to silent unmute attempt
   video.play().catch(() => {
-    setTimeout(dismiss, 100);  // skip if video blocked
+    setTimeout(dismiss, 100);
   });
 })();
 
