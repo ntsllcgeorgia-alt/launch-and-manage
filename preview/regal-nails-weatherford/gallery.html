@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gallery — Regal Nails Weatherford</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A;
+  --cream: #F8F4EC;
+  --champagne: #E8C9B5;
+  --rose: #B76E79;
+  --hot: #FF1493;
+  --rule: rgba(232, 201, 181, 0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 300; line-height: 1.55; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+
+/* ─── Brand bar ─── */
+.brand-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 40px; z-index: 100;
+  background: linear-gradient(180deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.6) 100%);
+}
+.brand-mark {
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px;
+}
+.brand-mark .est { font-size: 11px; letter-spacing: 0.3em; color: var(--champagne); margin-left: 10px; vertical-align: middle; }
+.nav { display: flex; gap: 30px; align-items: center; }
+.nav a {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--cream); text-decoration: none;
+  transition: color 0.2s ease;
+}
+.nav a:hover { color: var(--rose); }
+.nav a.cta {
+  padding: 10px 20px; border: 1px solid var(--rose); border-radius: 999px;
+  transition: all 0.3s ease;
+}
+.nav a.cta:hover { background: var(--rose); color: var(--bg); }
+
+/* ─── Hero ─── */
+.gallery-hero {
+  padding: 180px 60px 80px; max-width: 1500px; margin: 0 auto;
+  text-align: left;
+}
+.gallery-hero .label {
+  font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--champagne); margin-bottom: 24px;
+}
+.gallery-hero h1 {
+  font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
+  font-size: clamp(80px, 16vw, 240px); line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+.gallery-hero h1 .accent { color: var(--rose); }
+.gallery-hero .sub {
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(18px, 2vw, 26px);
+  color: var(--champagne); margin-top: 30px; max-width: 600px; line-height: 1.5;
+}
+
+/* ─── Filter tabs ─── */
+.filters {
+  display: flex; gap: 8px; flex-wrap: wrap; padding: 40px 60px 30px;
+  max-width: 1500px; margin: 0 auto;
+  border-bottom: 1px solid var(--rule);
+}
+.filter-btn {
+  font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--champagne); background: transparent;
+  border: 1px solid var(--rule); border-radius: 999px;
+  padding: 10px 20px; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.filter-btn:hover { color: var(--cream); border-color: var(--rose); }
+.filter-btn.active { background: var(--rose); color: var(--bg); border-color: var(--rose); }
+
+/* ─── Masonry-ish grid ─── */
+.masonry {
+  columns: 4 320px; column-gap: 12px;
+  padding: 30px 60px 80px; max-width: 1700px; margin: 0 auto;
+}
+.masonry .item {
+  break-inside: avoid; margin-bottom: 12px; position: relative;
+  overflow: hidden; border-radius: 2px; cursor: pointer;
+  background: #1a1a1a;
+  display: block;
+}
+.masonry .item img {
+  width: 100%; display: block; transition: transform 0.8s ease;
+}
+.masonry .item:hover img { transform: scale(1.06); }
+.masonry .item .caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 16px 18px; background: linear-gradient(180deg, transparent 0%, rgba(10,10,10,0.85) 100%);
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream);
+  opacity: 0; transform: translateY(10px); transition: opacity 0.4s, transform 0.4s;
+}
+.masonry .item:hover .caption { opacity: 1; transform: translateY(0); }
+
+/* Hide non-matching items when a filter is active */
+.masonry .item[data-cat]:not(.match) { display: none; }
+
+@media (max-width: 768px) {
+  .gallery-hero { padding: 130px 24px 50px; }
+  .filters { padding: 30px 24px 20px; }
+  .masonry { padding: 20px 24px 50px; columns: 2 200px; }
+}
+
+/* ─── CTA bottom ─── */
+.cta-bottom {
+  text-align: center; padding: 100px 40px;
+  border-top: 1px solid var(--rule);
+  background: linear-gradient(135deg, var(--bg) 0%, rgba(255, 20, 147, 0.12) 50%, var(--bg) 100%);
+}
+.cta-bottom h2 {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 900;
+  font-size: clamp(50px, 9vw, 130px); color: var(--cream);
+  letter-spacing: -0.02em; line-height: 0.95;
+}
+.cta-bottom .phone {
+  display: inline-block; margin-top: 30px; padding: 24px 48px;
+  background: var(--hot); color: var(--cream); border-radius: 999px;
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(22px, 3vw, 30px);
+  text-decoration: none;
+  box-shadow: 0 10px 40px rgba(255, 20, 147, 0.35);
+  transition: transform 0.3s;
+}
+.cta-bottom .phone:hover { transform: scale(1.04); }
+
+footer { padding: 60px 40px; text-align: center; border-top: 1px solid var(--rule); }
+footer a { color: var(--cream); text-decoration: none; font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(28px, 5vw, 56px); }
+footer .meta { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--champagne); margin-top: 16px; }
+
+/* ─── Mobile sticky CTA ─── */
+.mobile-cta {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--hot); color: var(--cream);
+  padding: 16px; text-align: center;
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px;
+  text-decoration: none; z-index: 200;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
+}
+@media (max-width: 768px) { .mobile-cta { display: block; } body { padding-bottom: 60px; } }
+</style>
+</head>
+<body>
+
+<header class="brand-bar">
+  <div class="brand-mark">Regal Nails<span class="est">EST. 2011</span></div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="index.html#visit">Visit</a>
+    <a href="tel:8175993360" class="cta">Call · (817) 599-3360</a>
+  </nav>
+</header>
+
+<section class="gallery-hero">
+  <div class="label">— Plate · Recent Work</div>
+  <h1>The <span class="accent serif">gallery</span>.</h1>
+  <p class="sub">Every nail. Every angle. Twelve years of Weatherford's most-loved work.</p>
+</section>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-cat="all">All</button>
+  <button class="filter-btn" data-cat="instagram">From Instagram</button>
+  <button class="filter-btn" data-cat="hands">Hands</button>
+  <button class="filter-btn" data-cat="feet">Pedicure</button>
+  <button class="filter-btn" data-cat="art">Nail Art</button>
+  <button class="filter-btn" data-cat="studio">Studio</button>
+  <button class="filter-btn" data-cat="brow">Brow & Lash</button>
+</div>
+
+<div style="text-align:center; padding:20px 40px; max-width:1500px; margin:0 auto;">
+  <a href="https://www.instagram.com/dallastonynails/" target="_blank" style="display:inline-flex; align-items:center; gap:10px; font-size:11px; letter-spacing:0.4em; text-transform:uppercase; color:var(--hot); text-decoration:none;">
+    <span>Follow</span> @dallastonynails <span>↗</span>
+  </a>
+</div>
+
+<div class="masonry" id="masonry">
+  <!-- Tony's actual Instagram work — featured first -->
+  <a class="item match" data-cat="instagram" href="instagram/insta_04.jpg" target="_blank">
+    <img src="instagram/insta_04.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_05.jpg" target="_blank">
+    <img src="instagram/insta_05.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_06.jpg" target="_blank">
+    <img src="instagram/insta_06.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_07.jpg" target="_blank">
+    <img src="instagram/insta_07.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_08.jpg" target="_blank">
+    <img src="instagram/insta_08.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_09.jpg" target="_blank">
+    <img src="instagram/insta_09.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_11.jpg" target="_blank">
+    <img src="instagram/insta_11.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_12.jpg" target="_blank">
+    <img src="instagram/insta_12.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_13.jpg" target="_blank">
+    <img src="instagram/insta_13.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_15.jpg" target="_blank">
+    <img src="instagram/insta_15.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_17.jpg" target="_blank">
+    <img src="instagram/insta_17.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_18.jpg" target="_blank">
+    <img src="instagram/insta_18.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_23.jpg" target="_blank">
+    <img src="instagram/insta_23.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_24.jpg" target="_blank">
+    <img src="instagram/insta_24.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_25.jpg" target="_blank">
+    <img src="instagram/insta_25.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_27.jpg" target="_blank">
+    <img src="instagram/insta_27.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_28.jpg" target="_blank">
+    <img src="instagram/insta_28.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_29.jpg" target="_blank">
+    <img src="instagram/insta_29.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+  <a class="item match" data-cat="instagram" href="instagram/insta_30.jpg" target="_blank">
+    <img src="instagram/insta_30.jpg" alt="Tony Nguyen nail art" loading="lazy">
+    <div class="caption">@dallastonynails</div>
+  </a>
+
+  <!-- Editorial fill (AI / studio shots) -->
+  <a class="item match" data-cat="hands" href="higgsfield/01_hero.png" target="_blank">
+    <img src="higgsfield/01_hero.png" alt="Champagne ombre manicure">
+    <div class="caption">Champagne ombre · macro</div>
+  </a>
+  <a class="item match" data-cat="art" href="higgsfield/02_gallery_main.png" target="_blank">
+    <img src="higgsfield/02_gallery_main.png" alt="Five-finger nail art">
+    <div class="caption">Five-finger art · multi-style</div>
+  </a>
+  <a class="item match" data-cat="hands" href="higgsfield/03_manicure.png" target="_blank">
+    <img src="higgsfield/03_manicure.png" alt="Classic nude pink manicure">
+    <div class="caption">Classic nude · marble flat-lay</div>
+  </a>
+  <a class="item match" data-cat="feet" href="higgsfield/04a_pedicure_fair.png" target="_blank">
+    <img src="higgsfield/04a_pedicure_fair.png" alt="Pedicure with rose petals">
+    <div class="caption">Soft French pedi · linen</div>
+  </a>
+  <a class="item match" data-cat="feet" href="higgsfield/04b_pedicure_deep.png" target="_blank">
+    <img src="higgsfield/04b_pedicure_deep.png" alt="Plum pedicure">
+    <div class="caption">Plum gloss · spa setup</div>
+  </a>
+  <a class="item match" data-cat="art" href="higgsfield/05_acrylic.png" target="_blank">
+    <img src="higgsfield/05_acrylic.png" alt="Long acrylics with gold flake">
+    <div class="caption">Acrylic · gold flake gel</div>
+  </a>
+  <a class="item match" data-cat="brow" href="higgsfield/06_brow.png" target="_blank">
+    <img src="higgsfield/06_brow.png" alt="Brow detail">
+    <div class="caption">Brow shaping · macro</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/07_polish.png" target="_blank">
+    <img src="higgsfield/07_polish.png" alt="Polish bottles">
+    <div class="caption">Color archive · row</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/08_workstation_real.png" target="_blank">
+    <img src="higgsfield/08_workstation_real.png" alt="Workstation">
+    <div class="caption">Workstation · open</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/09_tools.png" target="_blank">
+    <img src="higgsfield/09_tools.png" alt="Manicure tools">
+    <div class="caption">Tool tray · flat-lay</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/10_gold_glitter.png" target="_blank">
+    <img src="higgsfield/10_gold_glitter.png" alt="Gold glitter jar">
+    <div class="caption">Glitter · loose pigment</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/11_brushes.png" target="_blank">
+    <img src="higgsfield/11_brushes.png" alt="Nail art brushes">
+    <div class="caption">Brushes · sable + rose-gold</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/12_color_swatches.png" target="_blank">
+    <img src="higgsfield/12_color_swatches.png" alt="Color swatches">
+    <div class="caption">Color swatches · ten-tone</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/13_polish_bottles_dark.png" target="_blank">
+    <img src="higgsfield/13_polish_bottles_dark.png" alt="Polish bottles dark">
+    <div class="caption">Polish row · dramatic</div>
+  </a>
+  <a class="item match" data-cat="hands" href="higgsfield/14_hand_holding_polish_fair.png" target="_blank">
+    <img src="higgsfield/14_hand_holding_polish_fair.png" alt="Hand holding polish">
+    <div class="caption">Hand · holding rose-gold</div>
+  </a>
+  <a class="item match" data-cat="hands" href="higgsfield/15_hand_open_olive.png" target="_blank">
+    <img src="higgsfield/15_hand_open_olive.png" alt="Open hand olive">
+    <div class="caption">Hand · plum gloss</div>
+  </a>
+  <a class="item match" data-cat="hands" href="higgsfield/16_hand_at_rest_deep.png" target="_blank">
+    <img src="higgsfield/16_hand_at_rest_deep.png" alt="Hand at rest">
+    <div class="caption">Hand · rose-gold acrylic</div>
+  </a>
+  <a class="item match" data-cat="hands" href="higgsfield/17_hand_close_up_french.png" target="_blank">
+    <img src="higgsfield/17_hand_close_up_french.png" alt="French manicure">
+    <div class="caption">French · macro</div>
+  </a>
+  <a class="item match" data-cat="feet" href="higgsfield/18_feet_red_polish_fair.png" target="_blank">
+    <img src="higgsfield/18_feet_red_polish_fair.png" alt="Red pedicure on marble">
+    <div class="caption">Classic red · marble</div>
+  </a>
+  <a class="item match" data-cat="feet" href="higgsfield/19_feet_french_pedi_olive.png" target="_blank">
+    <img src="higgsfield/19_feet_french_pedi_olive.png" alt="French pedicure">
+    <div class="caption">French pedi · towel</div>
+  </a>
+  <a class="item match" data-cat="feet" href="higgsfield/20_feet_glitter_deep.png" target="_blank">
+    <img src="higgsfield/20_feet_glitter_deep.png" alt="Glitter pedicure">
+    <div class="caption">Champagne glitter · satin</div>
+  </a>
+  <a class="item match" data-cat="feet" href="higgsfield/21_feet_petals_fair.png" target="_blank">
+    <img src="higgsfield/21_feet_petals_fair.png" alt="Feet in petals bowl">
+    <div class="caption">Spa soak · rose petals</div>
+  </a>
+  <a class="item match" data-cat="brow" href="higgsfield/22_eyes_close_up_fair.png" target="_blank">
+    <img src="higgsfield/22_eyes_close_up_fair.png" alt="Eyes close-up">
+    <div class="caption">Eyes & brow · editorial</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/24_brush_set_real.png" target="_blank">
+    <img src="higgsfield/24_brush_set_real.png" alt="Brush set">
+    <div class="caption">Brush set · real</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/25_tools_macro_real.png" target="_blank">
+    <img src="higgsfield/25_tools_macro_real.png" alt="Tools macro">
+    <div class="caption">Tools · macro</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/26_uv_lamp_real.png" target="_blank">
+    <img src="higgsfield/26_uv_lamp_real.png" alt="UV lamp">
+    <div class="caption">UV lamp · gel cure</div>
+  </a>
+  <a class="item match" data-cat="studio" href="higgsfield/27_polish_lineup_real.png" target="_blank">
+    <img src="higgsfield/27_polish_lineup_real.png" alt="Polish lineup">
+    <div class="caption">Polish lineup · walnut</div>
+  </a>
+</div>
+
+<section class="cta-bottom">
+  <h2 class="serif">See yours next.</h2>
+  <a href="tel:8175993360" class="phone">(817) 599-3360</a>
+</section>
+
+<footer>
+  <a href="tel:8175993360">(817) 599-3360</a>
+  <div class="meta">Inside Walmart · 1836 South Main · Weatherford, Texas</div>
+</footer>
+
+<a href="tel:8175993360" class="mobile-cta">Call (817) 599-3360</a>
+
+<script>
+// Filter logic
+(() => {
+  const buttons = document.querySelectorAll('.filter-btn');
+  const items = document.querySelectorAll('.masonry .item');
+  buttons.forEach(b => b.addEventListener('click', () => {
+    buttons.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    const cat = b.dataset.cat;
+    items.forEach(it => {
+      if (cat === 'all' || it.dataset.cat === cat) it.classList.add('match');
+      else it.classList.remove('match');
+    });
+  }));
+})();
+</script>
+
+</body>
+</html>

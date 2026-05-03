@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Regal Nails — Weatherford</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A;
+  --cream: #F8F4EC;
+  --champagne: #E8C9B5;
+  --rose: #B76E79;
+  --hot: #FF1493;
+  --red: #FF2E63;
+  --rule: rgba(232, 201, 181, 0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 300;
+  line-height: 1.55;
+  font-size: 17px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+.italic { font-style: italic; }
+
+/* ─── Custom cursor (desktop only) ─── */
+@media (min-width: 1024px) {
+  body { cursor: none; }
+  a, button, .clickable { cursor: none; }
+}
+.cursor-dot {
+  position: fixed; top: 0; left: 0; width: 32px; height: 32px;
+  border: 1.5px solid var(--rose);
+  border-radius: 999px; pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: width .3s, height .3s, border-color .3s, transform .15s ease-out;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+.cursor-dot.active { width: 56px; height: 56px; border-color: var(--hot); }
+@media (max-width: 1023px) { .cursor-dot { display: none; } }
+
+/* ─── Top brand bar ─── */
+.brand-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 40px; z-index: 100;
+  background: linear-gradient(180deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0) 100%);
+  pointer-events: none;
+}
+.brand-bar > * { pointer-events: auto; }
+.brand-mark {
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px;
+  letter-spacing: 0.02em;
+}
+.brand-mark .est { font-size: 11px; letter-spacing: 0.3em; color: var(--champagne); margin-left: 10px; vertical-align: middle; }
+.top-cta {
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--cream); text-decoration: none; padding: 10px 20px;
+  border: 1px solid var(--rose); border-radius: 999px;
+  transition: all 0.3s ease;
+}
+.top-cta:hover { background: var(--rose); color: var(--bg); }
+
+/* ─── HERO ─── */
+.hero {
+  position: relative; height: 100vh; min-height: 700px;
+  overflow: hidden;
+}
+.hero-slideshow { position: absolute; inset: 0; }
+.hero-slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transition: opacity 1.6s ease-in-out;
+  filter: brightness(0.55) saturate(1.1);
+}
+.hero-slide.active { opacity: 1; }
+
+/* ─── Intro video splash ─── */
+.intro-splash {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+.intro-splash.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro-splash video {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.intro-splash .skip {
+  position: absolute; top: 28px; right: 32px;
+  background: transparent; color: var(--cream);
+  border: 1px solid var(--rose); border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  cursor: pointer; z-index: 2;
+  font-family: 'Inter', sans-serif;
+}
+.intro-splash .skip:hover { background: var(--rose); color: var(--bg); }
+.intro-splash .brand-overlay {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center; z-index: 2; pointer-events: none;
+  opacity: 0; animation: brand-fade 2.4s 0.4s forwards;
+}
+.intro-splash .brand-overlay .top {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 900;
+  font-size: clamp(64px, 10vw, 140px); color: var(--cream);
+  text-shadow: 0 2px 30px rgba(0,0,0,0.6);
+  line-height: 0.95;
+}
+.intro-splash .brand-overlay .est {
+  font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--champagne); margin-top: 12px;
+}
+@keyframes brand-fade {
+  0% { opacity: 0; transform: translate(-50%, -45%); }
+  20%, 70% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -55%); }
+}
+.intro-splash::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.5) 100%);
+  pointer-events: none;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(10,10,10,0.6) 0%, rgba(183, 110, 121, 0.35) 60%, rgba(10,10,10,0.85) 100%);
+}
+.hero-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2; height: 100%;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 60px 120px 60px; max-width: 1500px; margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--champagne); margin-bottom: 24px;
+  opacity: 0; transform: translateY(20px);
+  animation: rise 1.2s 0.3s forwards;
+}
+.hero-headline {
+  font-family: 'Playfair Display', serif; font-weight: 900;
+  font-size: clamp(54px, 9vw, 132px); line-height: 0.95;
+  letter-spacing: -0.02em;
+  max-width: 1200px;
+  margin-bottom: 30px;
+  opacity: 0; transform: translateY(40px);
+  animation: rise 1.4s 0.5s forwards;
+}
+.hero-headline .accent { font-style: italic; color: var(--champagne); }
+.hero-headline .pop { color: var(--hot); }
+.hero-sub {
+  font-size: 19px; max-width: 540px; line-height: 1.55;
+  color: var(--cream); opacity: 0.85;
+  margin-bottom: 38px;
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 400;
+  opacity: 0; transform: translateY(20px);
+  animation: rise 1.4s 0.9s forwards;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 18px;
+  padding: 22px 38px;
+  background: var(--hot); color: var(--cream);
+  border: none; border-radius: 999px;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 22px; letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 10px 40px rgba(255, 20, 147, 0.35);
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(20px);
+  animation: rise 1.4s 1.2s forwards, pulse 3s 2.5s infinite;
+  width: fit-content;
+}
+.hero-cta:hover { background: var(--cream); color: var(--bg); transform: translateY(-2px); }
+.hero-stat {
+  position: absolute; top: 100px; right: 60px; z-index: 3;
+  text-align: right;
+  opacity: 0; transform: translateY(-20px);
+  animation: rise 1.4s 1s forwards;
+}
+.hero-stat .num {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
+  font-size: 78px; line-height: 1;
+  color: var(--cream);
+}
+.hero-stat .lab {
+  font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--champagne); margin-top: 8px;
+}
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 3;
+  font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--champagne);
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  opacity: 0; animation: rise 1.4s 1.8s forwards, bounce 2.5s 3s infinite;
+}
+.hero-scroll::after {
+  content: ''; width: 1px; height: 40px;
+  background: linear-gradient(180deg, var(--champagne), transparent);
+}
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 10px 40px rgba(255, 20, 147, 0.35); }
+  50% { box-shadow: 0 14px 60px rgba(255, 20, 147, 0.6); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ─── Marquee ticker ─── */
+.marquee {
+  background: var(--bg); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: 18px 0; overflow: hidden; position: relative;
+}
+.marquee-track {
+  display: flex; white-space: nowrap;
+  animation: scroll 40s linear infinite;
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
+  font-size: 32px; color: var(--hot);
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-item { padding: 0 50px; }
+.marquee-item .dot { color: var(--rose); padding: 0 10px; }
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Stats band ─── */
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  text-align: center;
+  padding: 80px 40px;
+}
+.stat-item { padding: 0 20px; border-right: 1px solid var(--rule); }
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
+  font-size: clamp(64px, 8vw, 110px); line-height: 1;
+  color: var(--cream);
+}
+.stat-lab {
+  font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--champagne); margin-top: 12px;
+}
+@media (max-width: 768px) {
+  .stats { grid-template-columns: repeat(2, 1fr); padding: 50px 20px; }
+  .stat-item { padding: 30px 10px; border-right: none; border-bottom: 1px solid var(--rule); }
+  .stat-item:nth-child(2) { border-right: none; }
+}
+
+/* ─── Section labels ─── */
+.section-label {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 80px 40px 30px; max-width: 1500px; margin: 0 auto;
+  font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--champagne);
+}
+.section-label .num { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 18px; }
+
+/* ─── Gallery ─── */
+.gallery {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; padding: 0 40px 80px; max-width: 1700px; margin: 0 auto;
+}
+.tile {
+  position: relative; overflow: hidden;
+  background: #1a1a1a;
+  cursor: pointer;
+}
+.tile img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.8s ease;
+}
+.tile:hover img { transform: scale(1.06); }
+.tile.t-wide { grid-column: span 2; }
+.tile.t-tall { grid-row: span 2; }
+@media (max-width: 768px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); padding: 0 16px 40px; }
+  .tile.t-wide, .tile.t-tall { grid-column: span 2; grid-row: span 1; }
+}
+.tile::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(10,10,10,0.4) 100%);
+  pointer-events: none;
+}
+
+/* ─── Testimonials ─── */
+.reviews { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+.review {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 48px); line-height: 1.3;
+  color: var(--cream);
+  margin-bottom: 80px;
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 1s, transform 1s;
+}
+.review.visible { opacity: 1; transform: translateY(0); }
+.review .quote-mark {
+  font-family: 'Playfair Display', serif; font-size: 80px;
+  color: var(--rose); line-height: 0; vertical-align: -.4em;
+}
+.review-meta {
+  margin-top: 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.review-stars { color: var(--rose); font-size: 14px; letter-spacing: 0.2em; }
+.review-author { font-family: 'Inter', sans-serif; font-style: normal; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--champagne); }
+
+/* ─── CTA banner ─── */
+.cta-banner {
+  position: relative; padding: 140px 40px; text-align: center;
+  background: linear-gradient(135deg, var(--bg) 0%, rgba(255, 20, 147, 0.18) 50%, var(--bg) 100%);
+  background-size: 300% 300%;
+  animation: gradient-shift 12s ease infinite;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.cta-headline {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 900;
+  font-size: clamp(60px, 11vw, 160px); line-height: 0.95;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.cta-button {
+  display: inline-block; margin-top: 40px;
+  padding: 28px 56px;
+  background: var(--hot); color: var(--cream);
+  border: 2px solid var(--rose); border-radius: 999px;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: clamp(22px, 3vw, 32px); letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 10px 50px rgba(255, 20, 147, 0.35);
+  animation: pulse 3s infinite;
+  transition: transform 0.3s ease;
+}
+.cta-button:hover { transform: scale(1.04); }
+
+/* ─── Services list ─── */
+.services { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+.service {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 32px 0; border-bottom: 1px solid var(--rule);
+  transition: padding-left 0.4s ease;
+  cursor: pointer;
+}
+.service:hover { padding-left: 30px; }
+.service:hover .service-name { color: var(--rose); }
+.service:nth-child(even) { flex-direction: row-reverse; }
+.service:nth-child(even):hover { padding-left: 0; padding-right: 30px; }
+.service-name {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 400;
+  font-size: clamp(36px, 5vw, 68px); line-height: 1;
+  color: var(--cream); transition: color 0.3s ease;
+}
+.service-cta {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--champagne); text-decoration: none;
+  border-bottom: 1px solid var(--rose); padding-bottom: 4px;
+}
+.service-cta:hover { color: var(--hot); }
+
+/* ─── Visit ─── */
+.visit {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; padding: 100px 40px; max-width: 1500px; margin: 0 auto;
+  align-items: start;
+}
+.visit-info h2 {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 900;
+  font-size: clamp(60px, 9vw, 130px); color: var(--rose);
+  line-height: 0.95; letter-spacing: -0.02em;
+}
+.visit-info .address {
+  font-family: 'Playfair Display', serif; font-size: 22px;
+  color: var(--cream); margin: 30px 0 20px;
+  line-height: 1.5;
+}
+.visit-info .meta {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--champagne); margin-bottom: 30px;
+}
+.visit-hours {
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: 20px 0;
+}
+.hour-row {
+  display: flex; justify-content: space-between; padding: 8px 0;
+  font-size: 14px; letter-spacing: 0.1em;
+}
+.hour-row .day { color: var(--cream); text-transform: uppercase; }
+.hour-row .time { color: var(--champagne); font-family: 'Playfair Display', serif; font-style: italic; }
+.hour-row.today .day, .hour-row.today .time { color: var(--hot); }
+.open-now { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(34, 197, 94, 0.15); color: #22c55e; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-radius: 999px; margin-top: 24px; }
+.open-now::before { content: ''; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: blink 2s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.visit-cta {
+  margin-top: 40px;
+  display: inline-block; padding: 22px 38px;
+  background: var(--hot); color: var(--cream);
+  border-radius: 999px;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 22px;
+  text-decoration: none;
+  box-shadow: 0 10px 40px rgba(255, 20, 147, 0.3);
+}
+.visit-cta:hover { background: var(--cream); color: var(--bg); }
+.visit-map {
+  position: relative;
+  height: 600px; overflow: hidden; border: 1px solid var(--rule);
+}
+.visit-map img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.7) saturate(1.1);
+}
+@media (max-width: 768px) {
+  .visit { grid-template-columns: 1fr; padding: 50px 20px; gap: 40px; }
+  .visit-map { height: 350px; }
+  .hero-content { padding: 0 24px 80px; }
+  .hero-stat { top: 80px; right: 24px; }
+  .hero-stat .num { font-size: 48px; }
+  .section-label { padding: 50px 20px 20px; }
+  .reviews { padding: 60px 20px; }
+}
+
+/* ─── Footer ─── */
+footer {
+  text-align: center; padding: 80px 40px 60px;
+  border-top: 1px solid var(--rule);
+}
+.footer-phone {
+  font-family: 'Playfair Display', serif; font-weight: 900;
+  font-size: clamp(48px, 7vw, 88px); color: var(--cream);
+  text-decoration: none;
+  display: block; margin-bottom: 20px;
+}
+.footer-phone:hover { color: var(--hot); }
+.footer-meta {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--champagne);
+}
+
+/* ─── Mobile sticky CTA ─── */
+.mobile-cta {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--hot); color: var(--cream);
+  padding: 16px; text-align: center;
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px;
+  text-decoration: none;
+  z-index: 200;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
+}
+@media (max-width: 768px) {
+  .mobile-cta { display: block; }
+  body { padding-bottom: 60px; }
+}
+
+/* ─── Reveal on scroll ─── */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s, transform 1s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor"></div>
+
+<!-- ───────── Intro splash video ───────── -->
+<div class="intro-splash" id="introSplash">
+  <video id="introVideo" autoplay muted playsinline>
+    <source src="higgsfield/hero_video_1.mp4" type="video/mp4">
+  </video>
+  <div class="brand-overlay">
+    <div class="top">Regal Nails</div>
+    <div class="est">Weatherford · Est. 2011</div>
+  </div>
+  <button class="skip" id="introSkip">Skip ▸</button>
+</div>
+
+<header class="brand-bar">
+  <div class="brand-mark">Regal Nails<span class="est">EST. 2011</span></div>
+  <nav style="display:flex; gap:30px; align-items:center;">
+    <a href="gallery.html" style="font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cream); text-decoration:none;">Gallery</a>
+    <a href="#visit" style="font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:var(--cream); text-decoration:none;">Visit</a>
+    <a href="tel:8175993360" class="top-cta">Call · (817) 599-3360</a>
+  </nav>
+</header>
+
+<!-- ───────── HERO ───────── -->
+<section class="hero">
+  <div class="hero-slideshow">
+    <div class="hero-slide active" style="background-image:url('higgsfield/01_hero.png')"></div>
+    <div class="hero-slide" style="background-image:url('higgsfield/15_hand_open_olive.png')"></div>
+    <div class="hero-slide" style="background-image:url('higgsfield/16_hand_at_rest_deep.png')"></div>
+    <div class="hero-slide" style="background-image:url('higgsfield/17_hand_close_up_french.png')"></div>
+    <div class="hero-slide" style="background-image:url('higgsfield/14_hand_holding_polish_fair.png')"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-vignette"></div>
+
+  <div class="hero-stat">
+    <div class="num">238 ★</div>
+    <div class="lab">Google reviews</div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">— Weatherford, Texas · Inside Walmart South Main</div>
+    <h1 class="hero-headline">
+      <span class="pop">238</span>&nbsp;reasons<br>
+      Weatherford keeps<br>
+      <span class="accent">coming back.</span>
+    </h1>
+    <p class="hero-sub">Twelve years on South Main. Four-and-a-half stars. Zero apologies.</p>
+    <a href="tel:8175993360" class="hero-cta">Call (817) 599-3360</a>
+  </div>
+
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ───────── Marquee ───────── -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">WEATHERFORD'S FAVORITE<span class="dot">•</span></span>
+    <span class="marquee-item">12 YEARS RUNNING<span class="dot">•</span></span>
+    <span class="marquee-item">238 FIVE-STAR REVIEWS<span class="dot">•</span></span>
+    <span class="marquee-item">CALL (817) 599-3360<span class="dot">•</span></span>
+    <span class="marquee-item">OPEN 7 DAYS<span class="dot">•</span></span>
+    <span class="marquee-item">INSIDE WALMART · SOUTH MAIN<span class="dot">•</span></span>
+    <span class="marquee-item">WEATHERFORD'S FAVORITE<span class="dot">•</span></span>
+    <span class="marquee-item">12 YEARS RUNNING<span class="dot">•</span></span>
+    <span class="marquee-item">238 FIVE-STAR REVIEWS<span class="dot">•</span></span>
+    <span class="marquee-item">CALL (817) 599-3360<span class="dot">•</span></span>
+    <span class="marquee-item">OPEN 7 DAYS<span class="dot">•</span></span>
+    <span class="marquee-item">INSIDE WALMART · SOUTH MAIN<span class="dot">•</span></span>
+  </div>
+</div>
+
+<!-- ───────── STATS ───────── -->
+<section class="stats reveal">
+  <div class="stat-item">
+    <div class="stat-num" data-count="12">0</div>
+    <div class="stat-lab">Years</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" data-count="238">0</div>
+    <div class="stat-lab">Reviews</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" data-count="4.5" data-decimals="1">0</div>
+    <div class="stat-lab">Stars</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" data-count="7">0</div>
+    <div class="stat-lab">Days open</div>
+  </div>
+</section>
+
+<!-- ───────── GALLERY ───────── -->
+<div class="section-label">
+  <div><span class="num">No. 01</span>&nbsp;&nbsp;— Recent work · live from <a href="https://www.instagram.com/dallastonynails/" target="_blank" style="color:var(--hot);text-decoration:none;">@dallastonynails</a></div>
+  <div>Plate I</div>
+</div>
+<section class="gallery reveal">
+  <div class="tile t-tall"><img src="instagram/insta_04.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_05.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_17.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_06.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_07.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile t-wide"><img src="instagram/insta_24.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_11.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_25.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_12.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_28.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_29.jpg" alt="Tony Nguyen nail art"></div>
+  <div class="tile"><img src="instagram/insta_23.jpg" alt="Tony Nguyen nail art"></div>
+</section>
+
+<div style="text-align:center; padding:0 40px 80px;">
+  <a href="gallery.html" style="display:inline-flex; align-items:center; gap:18px; font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:clamp(28px,4vw,52px); color:var(--cream); text-decoration:none; border-bottom:1px solid var(--rose); padding-bottom:8px;">
+    See the full gallery
+    <span style="font-size:32px;">→</span>
+  </a>
+</div>
+
+<!-- ───────── REVIEWS ───────── -->
+<div class="section-label">
+  <div><span class="num">No. 02</span>&nbsp;&nbsp;— Why they keep coming back</div>
+  <div>Plate II</div>
+</div>
+<section class="reviews">
+  <div class="review reveal">
+    <span class="quote-mark">“</span> The four of them all do truly amazing work, you won't be disappointed. I've been coming here twelve years.
+    <div class="review-meta">
+      <span class="review-stars">★★★★★</span>
+      <span class="review-author">Ranch Foreman · Google review</span>
+    </div>
+  </div>
+  <div class="review reveal">
+    <span class="quote-mark">“</span> My family has been loyal to this nail salon for about twelve years now. They do an exceptional job.
+    <div class="review-meta">
+      <span class="review-stars">★★★★★</span>
+      <span class="review-author">Gracie Hood · Google review</span>
+    </div>
+  </div>
+  <div class="review reveal">
+    <span class="quote-mark">“</span> I loved my nails — the people are very nice and patient. They did exactly what I wanted.
+    <div class="review-meta">
+      <span class="review-stars">★★★★★</span>
+      <span class="review-author">Camila Suarez · Google review</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CTA BANNER ───────── -->
+<section class="cta-banner reveal">
+  <h2 class="cta-headline serif italic">Book a chair.</h2>
+  <a href="tel:8175993360" class="cta-button">(817) 599-3360</a>
+</section>
+
+<!-- ───────── SERVICES ───────── -->
+<div class="section-label">
+  <div><span class="num">No. 03</span>&nbsp;&nbsp;— Services</div>
+  <div>Plate III</div>
+</div>
+<section class="services">
+  <a href="tel:8175993360" class="service">
+    <span class="service-name">Manicure</span>
+    <span class="service-cta">Call to book</span>
+  </a>
+  <a href="tel:8175993360" class="service">
+    <span class="service-name">Pedicure</span>
+    <span class="service-cta">Call to book</span>
+  </a>
+  <a href="tel:8175993360" class="service">
+    <span class="service-name">Acrylic full set</span>
+    <span class="service-cta">Call to book</span>
+  </a>
+  <a href="tel:8175993360" class="service">
+    <span class="service-name">Nail art</span>
+    <span class="service-cta">Call to book</span>
+  </a>
+  <a href="tel:8175993360" class="service">
+    <span class="service-name">Brow wax</span>
+    <span class="service-cta">Call to book</span>
+  </a>
+  <a href="tel:8175993360" class="service">
+    <span class="service-name">Polish change</span>
+    <span class="service-cta">Call to book</span>
+  </a>
+</section>
+
+<!-- ───────── More gallery — second pass ───────── -->
+<div class="section-label">
+  <div><span class="num">No. 04</span>&nbsp;&nbsp;— The studio</div>
+  <div>Plate IV</div>
+</div>
+<section class="gallery reveal">
+  <div class="tile t-wide"><img src="higgsfield/08_workstation_real.png" alt="Real workstation"></div>
+  <div class="tile"><img src="higgsfield/10_gold_glitter.png" alt="Gold glitter"></div>
+  <div class="tile"><img src="higgsfield/24_brush_set_real.png" alt="Brush set"></div>
+  <div class="tile"><img src="higgsfield/25_tools_macro_real.png" alt="Tools macro"></div>
+  <div class="tile t-wide"><img src="higgsfield/27_polish_lineup_real.png" alt="Polish lineup"></div>
+  <div class="tile"><img src="higgsfield/26_uv_lamp_real.png" alt="UV lamp"></div>
+  <div class="tile"><img src="higgsfield/22_eyes_close_up_fair.png" alt="Eyes"></div>
+  <div class="tile"><img src="higgsfield/06_brow.png" alt="Brow"></div>
+  <div class="tile t-wide"><img src="higgsfield/21_feet_petals_fair.png" alt="Feet in petals"></div>
+  <div class="tile"><img src="higgsfield/18_feet_red_polish_fair.png" alt="Red pedicure"></div>
+  <div class="tile"><img src="higgsfield/13_polish_bottles_dark.png" alt="Polish bottles"></div>
+</section>
+
+<!-- ───────── VISIT ───────── -->
+<div class="section-label">
+  <div><span class="num">No. 05</span>&nbsp;&nbsp;— Visit</div>
+  <div>Plate V</div>
+</div>
+<section class="visit" id="visit">
+  <div class="visit-info">
+    <h2 class="serif italic">The address.</h2>
+    <p class="address">1836 South Main Street<br>Weatherford, Texas 76086</p>
+    <p class="meta">Inside Walmart Supercenter</p>
+    <div class="visit-hours" id="hours">
+      <div class="hour-row" data-day="1"><span class="day">Mon</span><span class="time">10:00 — 7:00</span></div>
+      <div class="hour-row" data-day="2"><span class="day">Tue</span><span class="time">10:00 — 7:00</span></div>
+      <div class="hour-row" data-day="3"><span class="day">Wed</span><span class="time">10:00 — 7:00</span></div>
+      <div class="hour-row" data-day="4"><span class="day">Thu</span><span class="time">10:00 — 7:00</span></div>
+      <div class="hour-row" data-day="5"><span class="day">Fri</span><span class="time">10:00 — 7:00</span></div>
+      <div class="hour-row" data-day="6"><span class="day">Sat</span><span class="time">10:00 — 7:00</span></div>
+      <div class="hour-row" data-day="0"><span class="day">Sun</span><span class="time">12:00 — 5:00</span></div>
+    </div>
+    <span class="open-now" id="openNow" style="display:none">Open Now</span>
+    <br>
+    <a href="tel:8175993360" class="visit-cta">Call (817) 599-3360</a>
+  </div>
+  <div class="visit-map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3354.0!2d-97.7947221!3d32.7315185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x63f3df65a178c146!2sRegal+Nails%2C+Salon+%26+Spa!5e0!3m2!1sen!2sus!4v1700000000000" style="border:0;width:100%;height:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</section>
+
+<footer>
+  <a href="tel:8175993360" class="footer-phone">(817) 599-3360</a>
+  <div class="footer-meta">Inside Walmart · 1836 South Main · Weatherford, Texas 76086</div>
+</footer>
+
+<a href="tel:8175993360" class="mobile-cta">Call (817) 599-3360</a>
+
+<script>
+// ─── Intro splash video ───
+(() => {
+  const splash = document.getElementById('introSplash');
+  const video = document.getElementById('introVideo');
+  const skip = document.getElementById('introSkip');
+  if (!splash || !video) return;
+
+  // Lock body scroll while splash is up
+  document.body.style.overflow = 'hidden';
+  function dismiss() {
+    splash.classList.add('gone');
+    document.body.style.overflow = '';
+    setTimeout(() => splash.remove(), 1300);
+  }
+  video.addEventListener('ended', dismiss);
+  skip.addEventListener('click', dismiss);
+  // Fallback timeout in case video doesn't fire 'ended' (5s max)
+  setTimeout(dismiss, 5500);
+
+  // Try autoplay; if blocked, fall back to silent unmute attempt
+  video.play().catch(() => {
+    setTimeout(dismiss, 100);  // skip if video blocked
+  });
+})();
+
+// ─── Hero slideshow ───
+(() => {
+  const slides = document.querySelectorAll('.hero-slide');
+  let i = 0;
+  setInterval(() => {
+    slides[i].classList.remove('active');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('active');
+  }, 4000);
+})();
+
+// ─── Custom cursor ───
+(() => {
+  if (window.innerWidth < 1024) return;
+  const dot = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function loop() {
+    cx += (mx - cx) * 0.18;
+    cy += (my - cy) * 0.18;
+    dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a, button, .clickable, .tile, .service').forEach(el => {
+    el.addEventListener('mouseenter', () => dot.classList.add('active'));
+    el.addEventListener('mouseleave', () => dot.classList.remove('active'));
+  });
+})();
+
+// ─── Animated stat counters ───
+(() => {
+  const counters = document.querySelectorAll('.stat-num');
+  const seen = new Set();
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(ent => {
+      if (!ent.isIntersecting) return;
+      if (seen.has(ent.target)) return;
+      seen.add(ent.target);
+      const el = ent.target;
+      const target = parseFloat(el.dataset.count);
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const dur = 1600;
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const v = (target * eased).toFixed(decimals);
+        el.textContent = v;
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.4 });
+  counters.forEach(c => obs.observe(c));
+})();
+
+// ─── Reveal on scroll ───
+(() => {
+  const targets = document.querySelectorAll('.reveal, .review');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(ent => {
+      if (ent.isIntersecting) ent.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+  targets.forEach(t => obs.observe(t));
+})();
+
+// ─── Open now badge + highlight today's hours ───
+(() => {
+  const now = new Date();
+  const day = now.getDay();
+  const minute = now.getHours() * 60 + now.getMinutes();
+  const today = document.querySelector(`.hour-row[data-day="${day}"]`);
+  if (today) today.classList.add('today');
+  const opens = day === 0 ? 12 * 60 : 10 * 60;
+  const closes = day === 0 ? 17 * 60 : 19 * 60;
+  if (minute >= opens && minute < closes) {
+    document.getElementById('openNow').style.display = 'inline-flex';
+  }
+})();
+</script>
+
+</body>
+</html>
