@@ -867,6 +867,23 @@ img, svg, video { display: block; max-width: 100%; }
   max-width: var(--maxw); margin: 0 auto;
   padding: 50px var(--pad) 0;
   text-align: center;
+  position: relative;
+}
+.v2-runner {
+  position: absolute;
+  right: 6%; top: -10px;
+  width: clamp(120px, 14vw, 200px);
+  height: auto;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  animation: runnerBob 1.6s ease-in-out infinite alternate;
+}
+@keyframes runnerBob {
+  0%   { transform: translateY(0) rotate(-2deg); }
+  100% { transform: translateY(-8px) rotate(2deg); }
+}
+@media (max-width: 760px) {
+  .v2-runner { right: 3%; top: -4px; width: 110px; opacity: 0.85; }
 }
 .v2-stmt {
   font-family: var(--serif); font-style: italic; font-weight: 700;
@@ -948,6 +965,7 @@ body > .marquee { display: none; }
   </div>
 
   <div class="v2-marquee-inner">
+    <img src="assets/v2_running_character.png" alt="" class="v2-runner" aria-hidden="true">
     <p class="v2-stmt">
       Sites + social + ads. One human. From <span class="v2-price">$497/mo.</span>
     </p>
