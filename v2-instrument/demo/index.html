@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Generate my demo — Launch & Manage</title>
+<meta name="description" content="Tell us about your business. We'll build you a real, live website preview at your own URL — free, under an hour. No card. No catch.">
+<meta property="og:title" content="Generate my demo — Launch & Manage">
+<meta property="og:description" content="Tell us about your business. We'll build you a real, live website preview in under an hour. Free.">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0A0A0A;
+  --bg-2:      #111114;
+  --ink:       #F8F4EC;
+  --ink-mute:  #E8C9B5;
+  --ink-soft:  rgba(248,244,236,0.62);
+  --rule:      rgba(232,201,181,0.15);
+  --hot:       #FF1493;
+  --hot-2:     #FF2E63;
+  --maxw:      900px;
+  --pad:       clamp(20px, 4vw, 56px);
+  --display:   'Archivo Black', sans-serif;
+  --serif:     'Playfair Display', Georgia, serif;
+  --body:      'Inter', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-weight: 400;
+  line-height: 1.55;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+a { color: inherit; text-decoration: none; transition: color .25s ease, border-color .25s ease; }
+::selection { background: rgba(255,20,147,0.35); color: #fff; }
+
+/* ─── BRAND BAR ─── */
+.brand-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px var(--pad);
+  border-bottom: 1px solid var(--rule);
+}
+.brand-mark {
+  font-family: var(--display);
+  font-size: 16px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink);
+}
+.brand-mark .amp { color: var(--hot); text-shadow: 0 0 18px rgba(255,20,147,0.4); }
+.brand-back {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-soft);
+}
+.brand-back:hover { color: var(--hot); }
+
+/* ─── HERO ─── */
+.hero {
+  text-align: center;
+  padding: clamp(70px, 11vw, 130px) var(--pad) clamp(40px, 6vw, 60px);
+  max-width: var(--maxw); margin: 0 auto; width: 100%;
+}
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--hot);
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before { content: "—"; margin-right: 14px; color: var(--hot); }
+.hero-h {
+  font-family: var(--serif); font-style: italic; font-weight: 900;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 1.0; letter-spacing: -0.02em;
+  color: var(--ink); margin-bottom: 24px;
+}
+.hero-h .pink { color: var(--hot); }
+.hero-sub {
+  font-size: clamp(16px, 1.6vw, 19px);
+  color: var(--ink-soft); line-height: 1.6;
+  max-width: 62ch; margin: 0 auto 18px;
+}
+.hero-fineprint {
+  font-family: var(--serif); font-style: italic;
+  font-size: 14px; color: var(--ink-mute);
+}
+
+/* ─── FORM ─── */
+.form-wrap {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 0 var(--pad) clamp(70px, 10vw, 110px);
+  width: 100%; flex: 1;
+}
+.form {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: clamp(28px, 5vw, 56px);
+  display: grid; gap: 22px;
+}
+.field { display: grid; gap: 8px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+.field-label {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-mute);
+}
+.field-label .required { color: var(--hot); margin-left: 2px; }
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 16px 18px;
+  font-family: var(--body); font-size: 16px; color: var(--ink);
+  transition: border-color .25s ease, background .25s ease;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--hot);
+  background: rgba(255,20,147,0.04);
+}
+.field input::placeholder,
+.field textarea::placeholder { color: rgba(248,244,236,0.32); }
+.field textarea { min-height: 110px; resize: vertical; }
+.field select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23FF1493' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  padding-right: 44px;
+}
+.field select option { background: var(--bg-2); color: var(--ink); }
+
+.form-submit {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 20px 32px;
+  background: var(--hot); color: #fff;
+  font-family: var(--serif); font-weight: 700;
+  font-size: clamp(17px, 1.6vw, 20px); letter-spacing: 0.04em;
+  border: none; border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 14px 36px rgba(255,20,147,0.28);
+  transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+  margin-top: 8px;
+}
+.form-submit:hover {
+  background: var(--hot-2);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(255,46,99,0.4);
+}
+.form-submit:disabled {
+  opacity: 0.55; cursor: wait; transform: none;
+}
+.form-fineprint {
+  font-size: 13px; color: var(--ink-soft); text-align: center;
+  font-family: var(--serif); font-style: italic;
+}
+
+/* ─── SUCCESS STATE ─── */
+.success {
+  text-align: center;
+  padding: clamp(40px, 7vw, 80px) clamp(20px, 5vw, 56px);
+  background: var(--bg-2);
+  border: 1px solid var(--hot);
+  border-radius: 12px;
+}
+.success-eyebrow {
+  display: inline-block;
+  font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--hot);
+  margin-bottom: 24px;
+}
+.success-h {
+  font-family: var(--serif); font-style: italic; font-weight: 900;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.05; letter-spacing: -0.02em;
+  color: var(--ink); margin-bottom: 22px;
+}
+.success-body {
+  font-size: 17px; color: var(--ink-soft);
+  max-width: 50ch; margin: 0 auto 28px;
+}
+.success-meta {
+  font-family: var(--display);
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--hot);
+}
+
+/* ─── FOOTER ─── */
+.site-footer {
+  text-align: center;
+  padding: 36px var(--pad);
+  border-top: 1px solid var(--rule);
+  font-family: var(--display);
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.site-footer .pink { color: var(--hot); }
+</style>
+</head>
+<body>
+
+<!-- ─── BRAND BAR ─── -->
+<header class="brand-bar">
+  <a href="../" class="brand-mark">LAUNCH <span class="amp">&</span> MANAGE</a>
+  <a href="../" class="brand-back">← Back</a>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-eyebrow">Free preview · No card · ~1 hour</div>
+  <h1 class="hero-h">Tell us about your <span class="pink">business.</span></h1>
+  <p class="hero-sub">
+    Fill this out, hit send, and we'll build you a real website preview at your own URL — usually within the hour. You'll get one email with the link, a screenshot, and a short Loom walking through it.
+  </p>
+  <p class="hero-fineprint">If you don't love it, close the tab. We don't follow up unless you ask.</p>
+</section>
+
+<!-- ─── FORM ─── -->
+<div class="form-wrap" id="formWrap">
+
+  <!-- ACTIVE FORM -->
+  <form
+    id="demoForm"
+    class="form"
+    action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+    method="POST"
+  >
+    <!-- TODO: replace YOUR_FORMSPREE_ID with the form ID from formspree.io (sign-up takes 2 min, free tier = 50 submissions/mo) -->
+
+    <input type="hidden" name="_subject" value="🎨 New L&M demo request">
+    <input type="hidden" name="source" value="launchandmanage.com/demo/">
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="full_name">Your name <span class="required">*</span></label>
+        <input id="full_name" name="full_name" type="text" placeholder="Jane Doe" required>
+      </div>
+      <div class="field">
+        <label class="field-label" for="business_name">Business name <span class="required">*</span></label>
+        <input id="business_name" name="business_name" type="text" placeholder="Jane's Salon & Spa" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="business_type">Business type <span class="required">*</span></label>
+        <select id="business_type" name="business_type" required>
+          <option value="" disabled selected>Pick one…</option>
+          <option value="salon-spa">Salon · Spa · Nails</option>
+          <option value="restaurant-bar">Restaurant · Bar · Cafe</option>
+          <option value="contractor-trade">Contractor · Trade · Construction</option>
+          <option value="auto-transport">Auto · Transportation · Towing</option>
+          <option value="retail-boutique">Retail · Boutique · E-commerce</option>
+          <option value="health-wellness">Health · Wellness · Fitness</option>
+          <option value="professional-services">Professional services (law, accounting, etc.)</option>
+          <option value="creative-services">Creative services (photo, video, design)</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="city_state">City, State <span class="required">*</span></label>
+        <input id="city_state" name="city_state" type="text" placeholder="Weatherford, TX" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="phone">Phone <span class="required">*</span></label>
+        <input id="phone" name="phone" type="tel" placeholder="(817) 555-1234" required>
+      </div>
+      <div class="field">
+        <label class="field-label" for="email">Email <span class="required">*</span></label>
+        <input id="email" name="email" type="email" placeholder="you@yourbusiness.com" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="tier_interest">Tier you're eyeing (optional)</label>
+      <select id="tier_interest" name="tier_interest">
+        <option value="">Not sure yet</option>
+        <option value="spark">Spark — $497/mo</option>
+        <option value="engine">Engine — $1,497/mo</option>
+        <option value="empire">Empire — $3,997/mo</option>
+        <option value="build">Build — $7,497 one-time</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="notes">Anything we should know? (optional)</label>
+      <textarea id="notes" name="notes" placeholder="Existing website? Brand colors? Vibes you like? A salon you wish you looked like? Just type — we'll figure it out."></textarea>
+    </div>
+
+    <button type="submit" class="form-submit" id="submitBtn">
+      Generate my demo
+      <span>→</span>
+    </button>
+
+    <p class="form-fineprint">
+      We'll only use your info to build your preview and email you back. No spam, no sharing, no upsell drip.
+    </p>
+  </form>
+
+  <!-- SUCCESS STATE (hidden until submit) -->
+  <div class="success" id="successState" style="display:none;">
+    <div class="success-eyebrow">— We're on it</div>
+    <h2 class="success-h">Watch your inbox.</h2>
+    <p class="success-body">
+      We'll have your preview ready in under an hour during business hours (CT). If it's late, it'll be there by morning. You'll get one email with the URL, a screenshot, and a short walkthrough.
+    </p>
+    <div class="success-meta">Free · No card · No follow-up unless you ask</div>
+  </div>
+
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer class="site-footer">
+  LAUNCH <span class="pink">&</span> MANAGE &nbsp;·&nbsp; © 2026 &nbsp;·&nbsp; WEATHERFORD, TX
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // Prefill tier from URL ?tier=engine
+  const params = new URLSearchParams(window.location.search);
+  const tier = params.get('tier');
+  if (tier) {
+    const sel = document.getElementById('tier_interest');
+    if (sel) {
+      for (const opt of sel.options) {
+        if (opt.value === tier) { opt.selected = true; break; }
+      }
+    }
+  }
+
+  // Form submission → show success state
+  const form    = document.getElementById('demoForm');
+  const success = document.getElementById('successState');
+  const btn     = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const data = new FormData(form);
+
+    try {
+      const r = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (r.ok) {
+        form.style.display    = 'none';
+        success.style.display = 'block';
+        window.scrollTo({ top: success.offsetTop - 60, behavior: 'smooth' });
+      } else {
+        const j = await r.json().catch(() => ({}));
+        alert('Something didn\'t go through. Please email hello@launchandmanage.com directly — we\'ll handle it from there.\n\n' + (j.error || 'Unknown error'));
+        btn.disabled = false;
+        btn.innerHTML = 'Generate my demo <span>→</span>';
+      }
+    } catch (err) {
+      alert('Connection issue. Email hello@launchandmanage.com directly with your details and we\'ll build the demo from there.');
+      btn.disabled = false;
+      btn.innerHTML = 'Generate my demo <span>→</span>';
+    }
+  });
+})();
+</script>
+</body>
+</html>
