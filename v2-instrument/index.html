@@ -911,6 +911,127 @@ img, svg, video { display: block; max-width: 100%; }
 /* hide the old marquee in V2 (we use v2-marquee-block instead) */
 body > .marquee { display: none; }
 
+/* ─── V2 ALTERNATING YELLOW SECTIONS ─────────────────────────────── */
+.yellow-section {
+  background: var(--hot) !important;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+.yellow-section .section-label,
+.yellow-section .section-label .num {
+  color: var(--ink) !important;
+}
+.yellow-section .h,
+.yellow-section .why-us-h,
+.yellow-section .pricing-intro .h,
+.yellow-section .faq-intro .h,
+.yellow-section .step-title,
+.yellow-section .step-day,
+.yellow-section .step-body,
+.yellow-section .service-name,
+.yellow-section .service-aside,
+.yellow-section .service-num,
+.yellow-section .tier-eyebrow,
+.yellow-section .tier-name,
+.yellow-section .tier-price,
+.yellow-section .tier-list li,
+.yellow-section .tier-extra .name,
+.yellow-section .tier-extra .pos,
+.yellow-section .why-card h3,
+.yellow-section .why-card p,
+.yellow-section .why-card .why-num,
+.yellow-section .faq-q,
+.yellow-section .faq-a {
+  color: var(--ink) !important;
+}
+.yellow-section .body,
+.yellow-section .services-intro .body,
+.yellow-section .pricing-intro .body,
+.yellow-section .process-intro .body {
+  color: rgba(10,10,10,0.72) !important;
+}
+.yellow-section .service-row,
+.yellow-section .step,
+.yellow-section .faq-item {
+  border-color: rgba(10,10,10,0.18) !important;
+}
+.yellow-section .tier {
+  background: rgba(255,255,255,0.6) !important;
+  border-color: var(--ink) !important;
+}
+.yellow-section .tier.featured {
+  background: var(--ink) !important;
+}
+.yellow-section .tier.featured .tier-name,
+.yellow-section .tier.featured .tier-price,
+.yellow-section .tier.featured .tier-eyebrow,
+.yellow-section .tier.featured .tier-position,
+.yellow-section .tier.featured .tier-list li {
+  color: var(--bg) !important;
+}
+.yellow-section .tier.featured .tier-cta {
+  background: var(--hot) !important; color: var(--ink) !important; border-color: var(--hot) !important;
+}
+.yellow-section .tier-price::after,
+.yellow-section .why-card .why-num::after,
+.yellow-section .howit-num::after,
+.yellow-section .stat-num::after {
+  background: var(--ink) !important;
+}
+
+/* Section illustrator (line-art character) */
+.section-illustration {
+  position: absolute; pointer-events: none;
+  mix-blend-mode: multiply;
+  animation: charBob 1.8s ease-in-out infinite alternate;
+}
+.section-illustration.top-right    { top: 30px;  right: 4%;  width: clamp(120px, 12vw, 180px); }
+.section-illustration.top-left     { top: 30px;  left: 4%;   width: clamp(120px, 12vw, 180px); transform: scaleX(-1); }
+.section-illustration.bottom-right { bottom: 40px; right: 4%; width: clamp(120px, 12vw, 180px); }
+.section-illustration.bottom-left  { bottom: 40px; left: 4%; width: clamp(120px, 12vw, 180px); transform: scaleX(-1); }
+@keyframes charBob {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+.section-illustration.top-left,
+.section-illustration.bottom-left {
+  animation-name: charBobMirror;
+}
+@keyframes charBobMirror {
+  0%   { transform: scaleX(-1) translateY(0); }
+  100% { transform: scaleX(-1) translateY(-6px); }
+}
+@media (max-width: 760px) {
+  .section-illustration { display: none; }
+}
+
+/* Marquee strip divider — reusable thin band between sections */
+.marquee-strip {
+  background: var(--hot);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: 14px 0; overflow: hidden; white-space: nowrap;
+}
+.marquee-strip.ink {
+  background: var(--ink);
+  color: var(--bg);
+}
+.marquee-strip .strip-track {
+  display: inline-flex; gap: 44px;
+  animation: marqueeRoll 42s linear infinite;
+}
+.marquee-strip .strip-item {
+  font-family: var(--display);
+  font-size: clamp(14px, 1.6vw, 20px);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink);
+  display: inline-flex; align-items: center; gap: 44px;
+}
+.marquee-strip.ink .strip-item { color: var(--bg); }
+.marquee-strip .strip-item .dot { color: rgba(10,10,10,0.4); font-family: var(--serif); }
+.marquee-strip.ink .strip-item .dot { color: rgba(248,244,236,0.4); }
+
 /* ─── REVEAL ANIMATION ───────────────────────────────────────────── */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s ease, transform 1s ease; }
 .reveal.is-in { opacity: 1; transform: translateY(0); }
@@ -999,11 +1120,25 @@ body > .marquee { display: none; }
   </div>
 </section>
 
-<!-- ─── SERVICES ─── -->
+<!-- ─── MARQUEE STRIP DIVIDER ─── -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">WHAT WE DO<span class="dot">·</span></span>
+    <span class="strip-item">SITES · SOCIAL · ADS · CONTENT · OPS<span class="dot">·</span></span>
+    <span class="strip-item">ONE HUMAN. ONE DM.<span class="dot">·</span></span>
+    <span class="strip-item">WHAT WE DO<span class="dot">·</span></span>
+    <span class="strip-item">SITES · SOCIAL · ADS · CONTENT · OPS<span class="dot">·</span></span>
+    <span class="strip-item">ONE HUMAN. ONE DM.<span class="dot">·</span></span>
+  </div>
+</div>
+
+<!-- ─── SERVICES (yellow) ─── -->
+<section class="yellow-section">
 <div class="section-label">
   <div><span class="num">No. 01</span>&nbsp;&nbsp;— What we do</div>
   <div>Plate I</div>
 </div>
+<img src="assets/v2_char_juggling.png" alt="" class="section-illustration top-right" aria-hidden="true">
 <section class="services reveal">
   <div class="services-intro">
     <h2 class="h">Five things.<br>One <span class="pink">number</span> to call.</h2>
@@ -1038,6 +1173,20 @@ body > .marquee { display: none; }
     <div class="service-aside">Same-day reply</div>
   </a>
 </section>
+</section>
+<!-- ── /yellow-section: services ── -->
+
+<!-- ─── MARQUEE STRIP DIVIDER ─── -->
+<div class="marquee-strip ink" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">SKIP THE SALES CALL<span class="dot">·</span></span>
+    <span class="strip-item">SEE YOUR SITE BEFORE YOU PAY<span class="dot">·</span></span>
+    <span class="strip-item">FREE · NO CARD<span class="dot">·</span></span>
+    <span class="strip-item">SKIP THE SALES CALL<span class="dot">·</span></span>
+    <span class="strip-item">SEE YOUR SITE BEFORE YOU PAY<span class="dot">·</span></span>
+    <span class="strip-item">FREE · NO CARD<span class="dot">·</span></span>
+  </div>
+</div>
 
 <!-- ─── HOW IT WORKS (the free demo flow) ─── -->
 <div class="section-label" id="how-it-works">
@@ -1080,11 +1229,25 @@ body > .marquee { display: none; }
   </div>
 </section>
 
-<!-- ─── PRICING ─── -->
+<!-- ─── MARQUEE STRIP DIVIDER ─── -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">PRICING<span class="dot">·</span></span>
+    <span class="strip-item">$497 · $1,497 · $3,997 · $7,497<span class="dot">·</span></span>
+    <span class="strip-item">CANCEL ANYTIME<span class="dot">·</span></span>
+    <span class="strip-item">PRICING<span class="dot">·</span></span>
+    <span class="strip-item">$497 · $1,497 · $3,997 · $7,497<span class="dot">·</span></span>
+    <span class="strip-item">CANCEL ANYTIME<span class="dot">·</span></span>
+  </div>
+</div>
+
+<!-- ─── PRICING (yellow) ─── -->
+<section class="yellow-section">
 <div class="section-label" id="pricing">
   <div><span class="num">No. 03</span>&nbsp;&nbsp;— Pricing</div>
   <div>Plate III</div>
 </div>
+<img src="assets/v2_char_pointing.png" alt="" class="section-illustration top-left" aria-hidden="true">
 <section class="pricing reveal">
   <div class="pricing-intro">
     <h2 class="h">Pricing.<br><span class="serif italic">No long-form contracts.</span></h2>
@@ -1161,13 +1324,28 @@ body > .marquee { display: none; }
     </a>
   </div>
 </section>
+</section>
+<!-- ── /yellow-section: pricing ── -->
+
+<!-- ─── MARQUEE STRIP DIVIDER ─── -->
+<div class="marquee-strip ink" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">PROCESS<span class="dot">·</span></span>
+    <span class="strip-item">DEMO TO LIVE IN 5 DAYS<span class="dot">·</span></span>
+    <span class="strip-item">YOU SIGN OFF EVERY STEP<span class="dot">·</span></span>
+    <span class="strip-item">PROCESS<span class="dot">·</span></span>
+    <span class="strip-item">DEMO TO LIVE IN 5 DAYS<span class="dot">·</span></span>
+    <span class="strip-item">YOU SIGN OFF EVERY STEP<span class="dot">·</span></span>
+  </div>
+</div>
 
 <!-- ─── PROCESS ─── -->
 <div class="section-label" id="process">
   <div><span class="num">No. 04</span>&nbsp;&nbsp;— Process</div>
   <div>Plate IV</div>
 </div>
-<section class="process reveal">
+<img src="assets/v2_char_typing.png" alt="" class="section-illustration top-right" aria-hidden="true" style="position:absolute;">
+<section class="process reveal" style="position: relative;">
   <div class="process-intro">
     <h2 class="h">From demo to live in <span class="serif italic hi">5 days.</span></h2>
     <p class="body">You already saw the preview. Now we make it yours — proper domain, real photos, full pages, social wired up. Here's what the 5 days look like once you pick a tier.</p>
@@ -1207,8 +1385,20 @@ body > .marquee { display: none; }
   </div>
 </section>
 
-<!-- ─── WHY US ─── -->
-<section class="why-us reveal">
+<!-- ─── MARQUEE STRIP DIVIDER ─── -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">WHY US<span class="dot">·</span></span>
+    <span class="strip-item">FULL STACK · NOT HANDOFF<span class="dot">·</span></span>
+    <span class="strip-item">LOCAL ANCHOR · WEATHERFORD<span class="dot">·</span></span>
+    <span class="strip-item">WHY US<span class="dot">·</span></span>
+    <span class="strip-item">FULL STACK · NOT HANDOFF<span class="dot">·</span></span>
+    <span class="strip-item">LOCAL ANCHOR · WEATHERFORD<span class="dot">·</span></span>
+  </div>
+</div>
+
+<!-- ─── WHY US (yellow) ─── -->
+<section class="yellow-section why-us reveal" style="position: relative;">
   <div class="why-us-inner">
     <h2 class="why-us-h">Why us<br>vs anyone else.</h2>
     <div class="why-grid">
@@ -1244,12 +1434,25 @@ body > .marquee { display: none; }
   </a>
 </section>
 
+<!-- ─── MARQUEE STRIP DIVIDER ─── -->
+<div class="marquee-strip ink" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">QUESTIONS<span class="dot">·</span></span>
+    <span class="strip-item">ASK ANYTHING<span class="dot">·</span></span>
+    <span class="strip-item">EVEN THE DUMB ONES<span class="dot">·</span></span>
+    <span class="strip-item">QUESTIONS<span class="dot">·</span></span>
+    <span class="strip-item">ASK ANYTHING<span class="dot">·</span></span>
+    <span class="strip-item">EVEN THE DUMB ONES<span class="dot">·</span></span>
+  </div>
+</div>
+
 <!-- ─── FAQ ─── -->
 <div class="section-label">
   <div><span class="num">No. 05</span>&nbsp;&nbsp;— Questions</div>
   <div>Plate V</div>
 </div>
-<section class="faq reveal">
+<section class="faq reveal" style="position: relative;">
+<img src="assets/v2_char_asking.png" alt="" class="section-illustration top-right" aria-hidden="true">
   <div class="faq-intro">
     <h2 class="h">Questions.<br><span class="serif italic hi">Answers.</span></h2>
   </div>
