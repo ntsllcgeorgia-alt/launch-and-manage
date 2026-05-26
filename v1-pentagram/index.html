@@ -794,17 +794,10 @@ img, svg, video { display: block; max-width: 100%; }
 /* ─── V1 PENTAGRAM-STYLE HERO OVERRIDES ─────────────────────────── */
 .hero-v1 { min-height: 100vh; align-items: center; justify-content: center; }
 
-/* Pentagram-style soft watercolor blobs scattered on white */
+/* Pentagram-style soft watercolor blobs — real Higgsfield asset */
 .hero-bg-v1 {
   position: absolute; inset: 0; z-index: 1;
-  background:
-    radial-gradient(circle 380px at 22% 30%, rgba(245,209,26,0.55) 0%, rgba(245,209,26,0) 65%),
-    radial-gradient(circle 320px at 80% 22%, rgba(255,184,0,0.40) 0%, rgba(255,184,0,0) 70%),
-    radial-gradient(circle 440px at 70% 75%, rgba(245,209,26,0.45) 0%, rgba(245,209,26,0) 60%),
-    radial-gradient(circle 280px at 30% 80%, rgba(255,227,77,0.35) 0%, rgba(255,227,77,0) 65%),
-    radial-gradient(circle 200px at 55% 50%, rgba(255,184,0,0.22) 0%, rgba(255,184,0,0) 70%),
-    #FFFFFF;
-  filter: blur(2px);
+  background: #FFFFFF url('assets/v1_hero_blobs.png') center/cover no-repeat;
   animation: blobDrift 28s ease-in-out infinite alternate;
 }
 @keyframes blobDrift {
